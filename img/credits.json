@@ -442,5 +442,35 @@
 "url": "https://commons.wikimedia.org/wiki/File:%D8%A3%D8%A8%D9%88_%D8%A7%D9%84%D8%A3%D8%B9%D9%84%D9%89_%D8%A7%D9%84%D9%85%D9%88%D8%AF%D9%88%D8%AF%D9%8A_%D9%88%D8%B9%D8%A8%D8%AF%D8%A7%D9%84%D9%84%D9%87_%D8%A7%D9%84%D8%B9%D9%82%D9%8A%D9%84_(cropped).jpg",
 "artist": "Unknown author",
 "license": "Public domain"
+},
+"shadhili": {
+"file": "Sheikh_Abdul_Majid_al-Shazly_hosted_by_Sheikh_Ahmed_Mahlawi_at_his_home_in_Alexandria.jpg",
+"url": "https://commons.wikimedia.org/wiki/File:Sheikh_Abdul_Majid_al-Shazly_hosted_by_Sheikh_Ahmed_Mahlawi_at_his_home_in_Alexandria.jpg",
+"artist": "Sharefmg",
+"license": "CC BY-SA 3.0"
+},
+"mahmoudshakir": {
+"file": "Nasir_al-Din_al-Asad_and_Mahmoud_Mohammed_Shaker_in_the_1950s.jpg",
+"url": "https://commons.wikimedia.org/wiki/File:Nasir_al-Din_al-Asad_and_Mahmoud_Mohammed_Shaker_in_the_1950s.jpg",
+"artist": "Unknown author",
+"license": "Public domain"
+},
+"issamattar": {
+"file": "الطنطاوي_والشاويش_وأديب_صالح_والعطار.jpg",
+"url": "https://commons.wikimedia.org/wiki/File:الطنطاوي_والشاويش_وأديب_صالح_والعطار.jpg",
+"artist": "Ayman dhū alghiná",
+"license": "CC0"
+},
+"nadwi": {
+"file": "المؤتمر_التأسيسي_لرابطة_الأدب_الإسلامي_العالمية_(cropped).jpg",
+"url": "https://commons.wikimedia.org/wiki/File:المؤتمر_التأسيسي_لرابطة_الأدب_الإسلامي_العالمية_(cropped).jpg",
+"artist": "Ayman dhū alghiná",
+"license": "CC BY-SA 4.0"
+},
+"adnanibrahim": {
+"file": "Dr_Adnan_Ibrahim.jpg",
+"url": "https://commons.wikimedia.org/wiki/File:Dr_Adnan_Ibrahim.jpg",
+"artist": "أيمن وهدان",
+"license": "CC BY-SA 4.0"
 }
 }

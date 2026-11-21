@@ -5,5 +5,6 @@
 "taliban":{"src":"img/logos/taliban.svg","file":"Flag of the Taliban.svg","url":"https://commons.wikimedia.org/wiki/File:Flag_of_the_Taliban.svg","artist":"Original: Taliban Vector: Lexicon","license":"Public domain"},
 "syriamb":{"src":"img/logos/mb.svg","file":"Muslim Brotherhood Emblem.svg","url":"https://commons.wikimedia.org/wiki/File:Muslim_Brotherhood_Emblem.svg","artist":"Xi Knight","license":"Public domain"},
 "hamas":{"src":"img/logos/hamas.png","file":"Emblem of Hamas Dark Green Variant Vector Graphic.svg","url":"https://commons.wikimedia.org/wiki/File:Emblem_of_Hamas_Dark_Green_Variant_Vector_Graphic.svg","artist":"Hstoops","license":"CC0"},
-"ahrar":{"src":"img/logos/ahrar.png","file":"Flag of Ahrar ash-Sham.svg","url":"https://commons.wikimedia.org/wiki/File:Flag_of_Ahrar_ash-Sham.svg","artist":"MrPenguin20","license":"Public domain"}
+"ahrar":{"src":"img/logos/ahrar.png","file":"Flag of Ahrar ash-Sham.svg","url":"https://commons.wikimedia.org/wiki/File:Flag_of_Ahrar_ash-Sham.svg","artist":"MrPenguin20","license":"Public domain"},
+"urwa":{"src":"img/logos/urwa.svg","file":"العروة الوثقى SVG 01.svg","url":"https://commons.wikimedia.org/wiki/File:العروة_الوثقى_SVG_01.svg","artist":"Masthead of al-Urwa al-Wuthqa (1884)","license":"Public domain"}
 }
