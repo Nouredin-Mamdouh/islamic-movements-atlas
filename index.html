@@ -241,6 +241,12 @@ dialog.bcard::backdrop{background:rgba(10,16,15,.45)}
 .parts button:hover{background:var(--chip)}
 .parts .yt-link{border:0;padding:2px 2px;font-size:12px;color:var(--muted)}
 .part{display:inline-flex;align-items:center;gap:2px}
+/* phones: a floating switch between the map and the open card, and the two-finger hint */
+.jump{position:fixed;z-index:30;bottom:max(16px,env(safe-area-inset-bottom,0px));inset-inline-end:16px;display:none;align-items:center;gap:6px;max-width:calc(100vw - 32px);
+  border:0;border-radius:999px;padding:10px 16px;background:var(--accent);color:var(--accent-ink);font-weight:700;font-size:14px;box-shadow:0 4px 16px rgba(0,0,0,.3);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jump svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.maptoast{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:rgba(10,16,15,.82);color:#fff;padding:10px 16px;border-radius:10px;font-size:14px;font-weight:600;pointer-events:none;opacity:0;transition:opacity .25s;z-index:6;text-align:center;max-width:80%}
+.maptoast.on{opacity:1}
 @media (max-width:860px){
   .app{height:auto}
   .main{grid-template-columns:1fr}
@@ -249,6 +255,9 @@ dialog.bcard::backdrop{background:rgba(10,16,15,.45)}
   .pbody{overflow:visible}
   .legend{font-size:11px}
   .eventcap{top:56px}
+  .app{padding-bottom:max(76px,env(safe-area-inset-bottom,0px))}   /* room under the floating map/card button */
+  #map{touch-action:pan-y pinch-zoom}   /* one finger scrolls the page; two fingers move the map */
+  .jump:not([hidden]){display:inline-flex}
   .player{flex-wrap:wrap}
   .pl-row select{flex-basis:100%}
   .yt{width:100%;height:auto;aspect-ratio:16/9;max-width:360px;margin-inline:auto}
@@ -295,6 +304,7 @@ dialog.bcard::backdrop{background:rgba(10,16,15,.45)}
         </div>
         <details class="legend" id="legendbox" open><summary id="legend-t"></summary><div class="lg" id="legend"></div></details>
         <div class="tip" id="tip" hidden></div>
+        <div class="maptoast" id="maptoast" aria-hidden="true"></div>
       </div>
       <div class="timeline">
         <button class="play" id="play"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path id="playicon" d="M4 2l10 6-10 6z"/></svg></button>
@@ -324,6 +334,7 @@ dialog.bcard::backdrop{background:rgba(10,16,15,.45)}
     </section>
   </div>
 </div>
+<button class="jump" id="jump" hidden></button>
 <div class="btip" id="btip" hidden></div>
 <dialog class="bcard" id="bcard"><div class="bc-in" id="bcard-in"></div></dialog>
 
@@ -366,6 +377,7 @@ const UI = {
   howT:"كيف تستخدمه",how:"حرّك شريط الزمن، أو اضغط ▶ لتشغيله، أو اضغط على علامات الأحداث فوقه. تنتقل النقاط بين المدن مع تنقّل أصحابها. اضغط على شخصية لترى جماعتها في تلك السنة، ورأي الشيخ فيها، ومنهجها، وكتبها، وخطوطًا ملوّنة إلى من له موقف منهم. مقياس المواقف: 😠 السلبي يسارًا، 😐 المحايد في الوسط، 😄 الإيجابي يمينًا. على الخريطة: الأخضر إيجابي، الأحمر سلبي، المتقطع محايد. يظهر شعار كل جماعة نشطة في مكان تأسيسها، وعند اختيار جماعة يظهر شعارها على كل دولة انتشرت فيها، وفي وضع «كل الجماعات» تُلوَّن كل دولة بخطوط بألوان الجماعات الموجودة فيها. كبّر الخريطة لتظهر صور الجميع.",
   iconsT:"رموز المنهج",partsT:"المقاطع",noteA:"كل الآراء والتقييمات والتصنيفات منسوبة إلى الشيخ كما وردت في السلسلة. حين لا يصنّف الشيخ شخصًا عقديًا يُكتب «لم يصنّفه الشيخ». التواريخ والأماكن والانتشار الجغرافي من المعرفة التاريخية العامة وقد تكون تقريبية. استُخرج النص من الترجمة الآلية في يوتيوب.",
   loadErr:"تعذّر تحميل البيانات. أعد تحميل الصفحة.",
+  toMap:"الخريطة",toCard:n=>`بطاقة ${n}`,twoFingers:"استخدم إصبعين لتحريك الخريطة",
   listen:"استمع إلى حلقات الشيخ",follow:"تتبّع الشيخ على الخريطة",followTip:"حين يذكر الشيخ شخصية أو جماعة أو سنة تُفتح بطاقتها وتتحرك الخريطة والزمن معه",
   prevEp:"الحلقة السابقة",nextEp:"الحلقة التالية",back10:"رجوع 10 ثوانٍ",fwd10:"تقديم 10 ثوانٍ",playPause:"تشغيل / إيقاف",closePl:"إغلاق المشغّل",seek:"موضع التشغيل",
   epN:n=>`الحلقة ${n}`,capNote:"النص من الترجمة الآلية في يوتيوب",playFrom:"استمع من أول موضع ذُكر فيه",onYT:"افتح على يوتيوب",
@@ -404,6 +416,7 @@ const UI = {
   howT:"How to use it",how:"Drag the timeline, press ▶ to play it, or click the event marks above it. Dots move between cities as people did. Click a figure to see their group that year, the sheikh's view of them, their method, books, and coloured lines to people they held views on. The opinion scale: 😠 negative on the left, 😐 neutral in the middle, 😄 positive on the right. On the map: green is positive, red negative, dashed neutral. Each active group shows its logo where it was founded; pick a group to see its logo on every country it spread to. In “All groups” mode each country is striped in the colours of the groups present there. Zoom in to see everyone's portrait.",
   iconsT:"Method icons",partsT:"Episodes",noteA:"All opinions, judgments and classifications are attributed to the sheikh as stated in the series. Where he does not classify someone's creed, the card says so. Dates, places and geographic spread come from general historical knowledge and may be approximate. The text was taken from YouTube's automatic captions; English is a translation.",
   loadErr:"Could not load the data. Reload the page.",
+  toMap:"Map",toCard:n=>`${n}'s card`,twoFingers:"Use two fingers to move the map",
   listen:"Listen to the sheikh's episodes",follow:"Follow the sheikh on the map",followTip:"When the sheikh names a figure, group or year, its card opens and the map and timeline move with him",
   prevEp:"Previous episode",nextEp:"Next episode",back10:"Back 10 seconds",fwd10:"Forward 10 seconds",playPause:"Play / pause",closePl:"Close the player",seek:"Playback position",
   epN:n=>`Episode ${n}`,capNote:"Arabic text from YouTube's automatic captions",playFrom:"Listen from where he is first mentioned",onYT:"Open on YouTube",
@@ -433,6 +446,28 @@ const T = () => UI[lang];
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+/* ---------- phones: the panel sits under the map, so taps scroll to what they opened ---------- */
+const PHONE = matchMedia("(max-width:860px)"), isPhone = () => PHONE.matches;
+const smooth = () => matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth";
+const scrollToEl = el => scrollTo({top: el.getBoundingClientRect().top + scrollY - 8, behavior: smooth()});
+// only when the panel's top is off screen; a card opened from the panel itself starts at its top
+function revealPanel(){ if (!isPhone()) return; const top = $(".panel").getBoundingClientRect().top; if (top < 0 || top > innerHeight * 0.6) scrollToEl($(".panel")); }
+function revealMap(){ if (isPhone() && $("#mapbox").getBoundingClientRect().bottom < 80) scrollToEl($(".mapcol")); }
+let toastT = null;
+function toast(msg){ const t = $("#maptoast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 1600); }
+let mapSeen = true;
+const MAPI = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14"/></svg>';
+// map off screen: "Map" takes you up; map on screen with a card open: the card's name takes you down
+function updJump(){
+  const j = $("#jump"); if (!D || !isPhone()){ j.hidden = true; return; }
+  const name = selP && tab === "people" ? nm(PI[selP]) : selG && tab === "groups" ? gn(GI[selG]) : null;
+  if (!mapSeen){ j.innerHTML = MAPI + esc(T().toMap); j.onclick = () => scrollToEl($(".mapcol")); j.hidden = false; }
+  else if (name){ j.innerHTML = "↓ " + esc(T().toCard(name)); j.onclick = () => scrollToEl($(".panel")); j.hidden = false; }
+  else j.hidden = true;
+}
+new IntersectionObserver(([en]) => { mapSeen = en.isIntersecting; updJump(); }, {threshold: 0.2}).observe($("#mapbox"));
+PHONE.addEventListener("change", updJump);
+document.addEventListener("scroll", () => { if (!$("#tip").hidden) hideTip(); }, {passive: true});
 // piecewise timeline: the medieval stretch (only three figures) is squeezed into the first 5%
 const TL = [[Y0, 0], [1790, 0.05], [YB, 0.15], [NOW, 1]];
 const toPos = y => { for (let i = 1; i < TL.length; i++) if (y <= TL[i][0] || i === TL.length - 1) { const [a, pa] = TL[i - 1], [b, pb] = TL[i]; return pa + (Math.min(y, b) - a) / (b - a) * (pb - pa); } };
@@ -518,7 +553,7 @@ function openBook(key){
 $("#bcard").addEventListener("click", e => {
   const d = $("#bcard");
   if (e.target === d || e.target.closest("[data-close]")) { d.close(); return; }   // backdrop or × closes
-  const a = e.target.closest("[data-author]"); if (a){ d.close(); selectPerson(a.dataset.author, true); }
+  const a = e.target.closest("[data-author]"); if (a){ d.close(); selectPerson(a.dataset.author, true); revealPanel(); }
 });
 $("#bcard").addEventListener("close", () => { openKey = null; writeHash(); });
 // one floating tooltip for every book icon on the page (hover or keyboard focus)
@@ -616,7 +651,13 @@ function initMap(world){
   });
   proj = d3.geoNaturalEarth1(); path = d3.geoPath(proj);
   gCountries.selectAll("path").data(countries).join("path").attr("class", "country");
-  zoom = d3.zoom().scaleExtent([1, 14]).on("zoom", e => { transform = e.transform; gRoot.attr("transform", transform); drawDots(false); });
+  zoom = d3.zoom().scaleExtent([1, 14])
+    .filter(e => e.type.startsWith("touch") ? !isPhone() || e.touches.length > 1 : (!e.ctrlKey || e.type === "wheel") && !e.button)
+    .on("zoom", e => { transform = e.transform; gRoot.attr("transform", transform); drawDots(false); });
+  // a sideways one-finger drag on a phone means they tried to move the map: say how
+  let t0 = null;
+  svg.node().addEventListener("touchstart", e => { t0 = e.touches.length === 1 ? [e.touches[0].clientX, e.touches[0].clientY] : null; }, {passive: true});
+  svg.node().addEventListener("touchmove", e => { if (!t0 || !isPhone() || e.touches.length !== 1) return; const dx = Math.abs(e.touches[0].clientX - t0[0]), dy = Math.abs(e.touches[0].clientY - t0[1]); if (dx > 24 && dx > dy * 1.5){ toast(T().twoFingers); t0 = null; } }, {passive: true});
   svg.call(zoom).on("dblclick.zoom", null);
   $("#zin").onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 1.6);
   $("#zout").onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 1 / 1.6);
@@ -675,7 +716,7 @@ function badgeJoin(parent, cls, data){
     return e; });
   sel.select("text.gmono").text(d => mono(d.g));
   sel.attr("transform", d => `translate(${d.x},${d.y}) scale(${d.s})`).attr("opacity", d => d.op ?? 1)
-    .on("click", (e, d) => { e.stopPropagation(); selectGroup(d.g.id); })
+    .on("click", (e, d) => { e.stopPropagation(); selectGroup(d.g.id); revealPanel(); })
     .on("mouseenter", (e, d) => showTip(e, `${glogo(d.g, "")}<div><b>${esc(gn(d.g))}</b>${d.tip || ""}</div>`)).on("mouseleave", hideTip);
   return sel;
 }
@@ -708,7 +749,7 @@ function drawPrisons(){
     g.append("text").attr("x", 9).attr("y", 4); return g; });
   sel.attr("transform", d => `translate(${d.x},${d.y})`).classed("empty", d => !d.inside.length)
     .select("text").text(d => d.inside.length > 1 ? d.inside.length : "");
-  sel.on("click", (e, d) => { e.stopPropagation(); if (d.inside.length) selectPerson(d.inside[0].id); })
+  sel.on("click", (e, d) => { e.stopPropagation(); if (d.inside.length){ selectPerson(d.inside[0].id); revealPanel(); } })
     .on("mouseenter", (e, d) => showTip(e, `<div><b>🔒 ${T().prison} · ${esc(cityName(d.c))}</b>${d.inside.length ? esc(T().prisonNow(year, d.inside.map(nm).join(lang === "ar" ? "، " : ", "))) : esc(T().prisonEmpty(year))}</div>`))
     .on("mouseleave", hideTip);
 }
@@ -749,7 +790,7 @@ function drawDots(animate){
   const dots = gLayerTop.selectAll("circle.pdot").data(L, d => d.p.id);
   dots.exit().transition().duration(animate ? 300 : 0).attr("r", 0).remove();
   dots.enter().append("circle").attr("class", "pdot").attr("r", 0).attr("cx", d => d.x).attr("cy", d => d.y)
-    .on("click", (e, d) => { e.stopPropagation(); selectPerson(d.p.id); })
+    .on("click", (e, d) => { e.stopPropagation(); selectPerson(d.p.id); revealPanel(); })
     .on("mouseenter", (e, d) => showTip(e, tipFor(d))).on("mouseleave", hideTip)
    .merge(dots).attr("fill", d => `var(--c-${d.p.cat})`)
     .classed("sel", d => d.p.id === selP).classed("dim", d => sel && d.p.id !== selP && !relSet.has(d.p.id))
@@ -760,7 +801,7 @@ function drawDots(animate){
   defs.selectAll("clipPath").data(L.filter(withPic), d => d.p.id).join(enter => { const c = enter.append("clipPath").attr("id", d => "cp-" + d.p.id); c.append("circle"); return c; })
     .select("circle").attr("r", PR).transition().duration(dur).attr("cx", d => d.x).attr("cy", d => d.y);
   gLayerTop.selectAll("image.pava").data(L.filter(withPic), d => d.p.id).join(enter => enter.append("image").attr("class", "pava").attr("preserveAspectRatio", "xMidYMin slice")
-      .on("click", (e, d) => { e.stopPropagation(); selectPerson(d.p.id); }).on("mouseenter", (e, d) => showTip(e, tipFor(d))).on("mouseleave", hideTip))
+      .on("click", (e, d) => { e.stopPropagation(); selectPerson(d.p.id); revealPanel(); }).on("mouseenter", (e, d) => showTip(e, tipFor(d))).on("mouseleave", hideTip))
     .attr("href", d => IMG[d.p.id]).attr("clip-path", d => `url(#cp-${d.p.id})`).attr("opacity", d => sel && d.p.id !== selP && !relSet.has(d.p.id) ? .3 : 1)
     .attr("width", d => PR(d) * 2).attr("height", d => PR(d) * 2)
     .transition().duration(dur).attr("x", d => d.x - PR(d)).attr("y", d => d.y - PR(d));
@@ -820,7 +861,7 @@ function setYear(y, silent){
 }
 
 /* ---------- panel ---------- */
-function initTabs(){ TABS.forEach(k => $("#tab-" + k).onclick = () => { tab = k; render(); $("#pbody").scrollTop = 0; writeHash(); }); }
+function initTabs(){ TABS.forEach(k => $("#tab-" + k).onclick = () => { tab = k; render(); $("#pbody").scrollTop = 0; writeHash(); revealPanel(); }); }
 let sameView = false;
 const saveScope = () => { try { localStorage.setItem("atlas-scope", JSON.stringify({scope, from: rFrom, to: rTo})); } catch(e) {} };
 function render(){
@@ -831,7 +872,7 @@ function render(){
   sameView = key === lastKey; lastKey = key;
   const open = sameView ? [...b.querySelectorAll(".long")].map(l => !l.hidden) : null, st = b.scrollTop;
   b.innerHTML = tab === "about" ? aboutHTML() : tab === "books" ? booksHTML() : tab === "groups" ? (selG ? groupHTML(GI[selG]) : groupsListHTML()) : (selP ? personHTML(PI[selP]) : peopleListHTML());
-  wire(b);
+  wire(b); updJump();
   if (open){
     b.querySelectorAll(".long").forEach((l, i) => { if (!open[i]) return; l.hidden = false; const m = l.previousElementSibling; if (m && m.matches("[data-t]")){ m.dataset.lbl = m.textContent; m.textContent = T().hide; } });
     b.scrollTop = st;
@@ -947,11 +988,11 @@ function wire(b){
     const t = e.target;
     const bk = t.closest("[data-bk]"); if (bk){ openBook(bk.dataset.bk); return; }
     const sc = t.closest("[data-scope]"); if (sc){ scope = sc.dataset.scope; if (scope === "range" && rFrom === 1950 && rTo === 1980) { rFrom = Math.max(Y0, year - 20); rTo = Math.min(NOW, year + 20); } saveScope(); render(); return; }
-    const pp = t.closest("[data-p]"); if (pp){ selectPerson(pp.dataset.p, true); return; }
-    const gg = t.closest("[data-g]"); if (gg){ selectGroup(gg.dataset.g); return; }
-    if (t.closest("[data-back]")){ if (tab === "groups") selG = null; else selP = null; paintCountries(); drawDots(false); render(); writeHash(); return; }
-    const ep = t.closest("[data-ep]"); if (ep){ playFrom(+ep.dataset.ep, ep.dataset.from); return; }
-    const jy = t.closest("[data-y]"); if (jy){ setYear(+jy.dataset.y); return; }
+    const pp = t.closest("[data-p]"); if (pp){ selectPerson(pp.dataset.p, true); revealPanel(); return; }
+    const gg = t.closest("[data-g]"); if (gg){ selectGroup(gg.dataset.g); revealPanel(); return; }
+    if (t.closest("[data-back]")){ if (tab === "groups") selG = null; else selP = null; paintCountries(); drawDots(false); render(); writeHash(); revealPanel(); return; }
+    const ep = t.closest("[data-ep]"); if (ep){ playFrom(+ep.dataset.ep, ep.dataset.from); revealMap(); return; }
+    const jy = t.closest("[data-y]"); if (jy){ setYear(+jy.dataset.y); revealMap(); return; }
     const m = t.closest("[data-t]"); if (m){ const l = m.nextElementSibling; if (!m.dataset.lbl) m.dataset.lbl = m.textContent; l.hidden = !l.hidden; m.textContent = l.hidden ? m.dataset.lbl : T().hide; return; }
     const m2 = t.closest("[data-t2]"); if (m2){ const l = m2.parentElement.querySelector(".long"); l.hidden = !l.hidden; }
   };
