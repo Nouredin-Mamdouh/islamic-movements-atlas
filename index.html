@@ -1,0 +1,868 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>أطلس الجماعات الإسلامية</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@500;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap">
+<style>
+/* Layout: atlas sheet — map dominant, reading panel docked at the reading-start side, timeline rail under the map */
+:root{
+  --bg:#f3f5f2; --panel:#ffffff; --ink:#1d2624; --muted:#5d6b67; --line:#d5dcd8;
+  --sea:#d7e5e6; --land:#e4e1d7; --border:#c3beb0; --accent:#1f7a5c; --accent-ink:#ffffff;
+  --pos:#2f8f5b; --neg:#b4472c; --neu:#8a8f8c; --chip:#eef2ef; --shadow:0 1px 2px rgba(20,30,28,.06),0 6px 24px rgba(20,30,28,.07);
+  --display:"Reem Kufi","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --body:"IBM Plex Sans Arabic",system-ui,"Segoe UI",Tahoma,sans-serif;
+  --c-leader:#1f7a5c; --c-scholar:#2d5d9f; --c-preacher:#c7811c; --c-thinker:#7a5aa6; --c-fighter:#a8432f; --c-ruler:#5b6770; --c-adversary:#8c2f39; --c-other:#8a8f8c;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1416; --panel:#151d20; --ink:#e4ebe8; --muted:#97a6a1; --line:#2a3538;
+  --sea:#101b1f; --land:#253031; --border:#3b4846; --accent:#4fbf95; --accent-ink:#0b1412;
+  --pos:#5cc98c; --neg:#e07a5a; --neu:#8d9794; --chip:#1d272a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+  --c-leader:#4fbf95; --c-scholar:#6c9be0; --c-preacher:#e3a643; --c-thinker:#a78bd4; --c-fighter:#e07a5a; --c-ruler:#9aa8b1; --c-adversary:#e06a78; --c-other:#9aa19e;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1416; --panel:#151d20; --ink:#e4ebe8; --muted:#97a6a1; --line:#2a3538;
+  --sea:#101b1f; --land:#253031; --border:#3b4846; --accent:#4fbf95; --accent-ink:#0b1412;
+  --pos:#5cc98c; --neg:#e07a5a; --neu:#8d9794; --chip:#1d272a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
+  --c-leader:#4fbf95; --c-scholar:#6c9be0; --c-preacher:#e3a643; --c-thinker:#a78bd4; --c-fighter:#e07a5a; --c-ruler:#9aa8b1; --c-adversary:#e06a78; --c-other:#9aa19e;
+  color-scheme:dark}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.7}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{display:grid;grid-template-rows:auto 1fr;height:100%;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px;gap:12px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(22px,3vw,30px);margin:0;line-height:1.2;text-wrap:balance}
+.sub{color:var(--muted);font-size:13px;margin:2px 0 0;max-width:80ch}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--panel);flex:none}
+.lang button{border:0;background:none;padding:6px 14px;cursor:pointer;color:var(--muted);font-weight:600;font-size:13px}
+.lang button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.main{display:grid;grid-template-columns:minmax(330px,410px) 1fr;gap:12px;min-height:0}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:0;overflow:hidden}
+.tabs{display:flex;border-bottom:1px solid var(--line)}
+.tab{flex:1;background:none;border:0;padding:10px 8px;cursor:pointer;color:var(--muted);font-weight:600;border-bottom:2px solid transparent}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.pbody{overflow:auto;padding:16px;min-height:0;flex:1}
+.mapcol{display:grid;grid-template-rows:1fr auto;gap:12px;min-height:0;min-width:0}
+.mapbox{position:relative;background:var(--sea);border:1px solid var(--line);border-radius:12px;overflow:hidden;min-height:320px;direction:ltr}
+#map{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+.country{fill:var(--land);stroke:var(--border);stroke-width:.5;vector-effect:non-scaling-stroke;transition:fill .5s}
+.yearbig{position:absolute;top:10px;left:14px;font-family:var(--display);font-size:clamp(34px,5vw,56px);line-height:1;color:var(--ink);opacity:.85;pointer-events:none;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.eventcap{position:absolute;top:68px;left:14px;width:max-content;max-width:min(320px,60%);font-size:13px;color:var(--muted);pointer-events:none}
+.mapctl{position:absolute;bottom:10px;left:10px;display:flex;flex-direction:column;gap:6px}
+.mapctl button{width:34px;height:34px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:18px;line-height:1}
+.legend{position:absolute;bottom:10px;right:10px;background:color-mix(in srgb,var(--panel) 88%,transparent);border:1px solid var(--line);border-radius:10px;padding:6px 10px;font-size:12px;max-width:calc(100% - 70px)}
+.legend .lg{display:grid;grid-template-columns:repeat(2,auto);gap:2px 12px}
+.legend span{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;flex:none}
+.layer-toggle{position:absolute;top:10px;right:10px;display:flex;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden;font-size:12px}
+.layer-toggle button{border:0;background:none;padding:6px 10px;cursor:pointer;color:var(--muted)}
+.layer-toggle button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.pdot{stroke:var(--panel);stroke-width:1.5;cursor:pointer}
+.pdot.sel{stroke:var(--ink);stroke-width:2.5}
+.pdot.dim{opacity:.25}
+.pava{cursor:pointer}
+.pava-ring{fill:none;stroke-width:2.5;pointer-events:none}
+.plabel{font-size:11px;fill:var(--ink);paint-order:stroke;stroke:var(--sea);stroke-width:3px;stroke-linejoin:round;pointer-events:none;font-weight:600}
+.gmark{cursor:pointer;stroke:var(--panel);stroke-width:1.5}
+.rel{fill:none;stroke-width:2;stroke-linecap:round;opacity:.85}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12.5px;box-shadow:var(--shadow);max-width:260px;z-index:5;display:flex;gap:8px;align-items:center}
+.tip b{display:block;font-size:13.5px}
+/* avatars */
+.ava{flex:none;border-radius:50%;object-fit:cover;object-position:50% 20%;background:var(--chip);display:inline-grid;place-items:center;font-family:var(--display);color:#fff;font-weight:700;overflow:hidden;border:2px solid var(--cat,var(--line))}
+.ava-xs{width:30px;height:30px;font-size:13px}
+.ava-sm{width:36px;height:36px;font-size:15px}
+.ava-lg{width:88px;height:88px;font-size:34px;border-width:3px}
+span.ava{background:var(--cat)}
+/* timeline */
+.timeline{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px 8px;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;box-shadow:var(--shadow);direction:ltr}
+.play{width:40px;height:40px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer;display:grid;place-items:center}
+.track{position:relative;padding-top:18px}
+.ticks{position:absolute;top:0;left:0;right:0;height:16px}
+.tick{position:absolute;top:4px;width:2px;height:10px;background:var(--muted);opacity:.55;transform:translateX(-1px);border:0;padding:0;cursor:pointer}
+.tick:hover,.tick.on{opacity:1;background:var(--accent);height:14px;top:2px}
+input[type=range]{width:100%;accent-color:var(--accent);margin:0;height:22px}
+.scale{position:relative;height:16px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.scale span{position:absolute;transform:translateX(-50%);white-space:nowrap}
+/* panel content */
+.hint{color:var(--muted);font-size:14px;margin:0}
+.search{width:100%;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);margin:10px 0 4px}
+.plist{display:flex;flex-direction:column;gap:2px}
+.prow{display:flex;align-items:center;gap:10px;width:100%;text-align:start;background:none;border:0;padding:5px 8px;border-radius:8px;cursor:pointer}
+.prow:hover{background:var(--chip)}
+.prow .nm{display:flex;flex-direction:column;line-height:1.35;min-width:0}
+.prow .nm small{color:var(--muted);font-size:12px}
+.prow > small{color:var(--muted);margin-inline-start:auto;font-variant-numeric:tabular-nums;white-space:nowrap}
+.eyebrow{font-size:12px;color:var(--muted);letter-spacing:.02em;font-weight:600;margin:20px 0 6px;display:flex;align-items:center;gap:8px}
+.eyebrow::after{content:"";flex:1;height:1px;background:var(--line)}
+.phead{display:flex;gap:14px;align-items:center;margin-top:10px}
+h2{font-family:var(--display);font-size:24px;margin:0;line-height:1.3}
+.meta{color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.lead{margin:12px 0 0;font-size:15.5px}
+.more{background:none;border:0;color:var(--accent);cursor:pointer;padding:2px 0;font-weight:600;font-size:13.5px}
+.long{margin:6px 0 0;color:var(--ink);font-size:14.5px}
+/* opinion gauge: physical left = negative, right = positive, in both languages */
+.gauge{position:relative;height:32px;margin:6px 14px 0;direction:ltr}
+.gauge .bar{position:absolute;left:-14px;right:-14px;top:14px;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--neg),var(--neu) 50%,var(--pos))}
+.gauge .mid{position:absolute;left:50%;top:10px;width:2px;height:12px;background:var(--muted);opacity:.5;transform:translateX(-1px)}
+.gauge .face{position:absolute;top:0;left:50%;transform:translateX(-50%);font-size:24px;line-height:32px;transition:left .9s cubic-bezier(.2,.9,.25,1.2)}
+.gauge-cap{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);direction:ltr}
+.gauge-cap .n{color:var(--neg)} .gauge-cap .p{color:var(--pos)}
+.verdict{font-size:12.5px;font-weight:600}
+.creed{display:inline-flex;align-items:center;gap:8px;border-radius:8px;padding:6px 10px;font-weight:600;font-size:13.5px;border:1px solid var(--line)}
+.creed i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.stances{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:8px}
+.stance{display:flex;align-items:center;gap:8px;font-size:13px;background:var(--chip);border-radius:8px;padding:6px 8px}
+.stance svg{width:20px;height:20px;flex:none;stroke:var(--accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.stance.neg svg{stroke:var(--neg)}
+.item{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px}
+.item-h{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;padding:0;text-align:start;cursor:pointer}
+.item-h b{font-weight:600}
+.item-h small{color:var(--muted);margin-inline-start:auto;font-variant-numeric:tabular-nums}
+.item p{margin:4px 0 0;font-size:14px}
+.sub2{color:var(--muted);font-size:13.5px}
+.relname{background:none;border:0;padding:0;cursor:pointer;font-weight:600;color:var(--ink);text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px;text-align:start}
+.relname:hover{text-decoration-color:var(--accent)}
+.off{color:var(--muted);font-size:12px}
+.journey{display:flex;flex-direction:column;gap:2px;margin-top:6px}
+.jrow{display:grid;grid-template-columns:52px 1fr;gap:8px;background:none;border:0;text-align:start;padding:4px 6px;border-radius:6px;cursor:pointer;font-size:13.5px}
+.jrow:hover{background:var(--chip)}
+.jrow.cur{background:var(--chip);font-weight:600}
+.jrow span:first-child{color:var(--muted);font-variant-numeric:tabular-nums}
+.status{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.st{display:flex;align-items:center;gap:8px;font-size:13.5px;border-radius:8px;padding:6px 10px;background:var(--chip);border:0;width:100%;text-align:start}
+button.st{cursor:pointer}
+.st i{width:10px;height:10px;border-radius:3px;flex:none}
+.grow{display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:10px;width:100%;background:none;border:0;text-align:start;padding:8px;border-radius:8px;cursor:pointer}
+.grow:hover{background:var(--chip)}
+.grow.inactive{opacity:.45}
+.grow small{color:var(--muted);font-variant-numeric:tabular-nums}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block}
+.back{background:none;border:0;color:var(--muted);cursor:pointer;padding:0;font-size:13px}
+.parts{display:flex;flex-wrap:wrap;gap:6px}
+.parts a{font-size:12.5px;color:var(--accent);text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+.note{font-size:12px;color:var(--muted);border-top:1px solid var(--line);margin-top:18px;padding-top:10px}
+.loading{display:grid;place-items:center;height:100%;color:var(--muted)}
+/* flag badge on the portrait */
+.ava-wrap{position:relative;flex:none;display:inline-block;line-height:0}
+.flag{position:absolute;bottom:0;inset-inline-end:-6px;width:30px;height:22.5px;border-radius:4px;border:2px solid var(--panel);box-shadow:0 1px 3px rgba(0,0,0,.25);object-fit:cover;background:var(--chip)}
+.ctry{display:inline-flex;align-items:center;gap:5px}
+.ctry img{width:18px;height:13.5px;border-radius:2px;box-shadow:0 0 0 1px var(--line)}
+/* book shelf */
+.shelf{display:flex;flex-wrap:wrap;gap:12px 10px;margin-top:10px}
+.bk{position:relative;width:50px;height:70px;border:0;padding:0;cursor:pointer;border-radius:3px 6px 6px 3px;background:var(--cv);color:#fff;
+  box-shadow:inset 6px 0 0 rgba(0,0,0,.22),inset 7px 0 0 rgba(255,255,255,.12),0 1px 2px rgba(0,0,0,.18),0 4px 10px rgba(0,0,0,.12);display:grid;place-items:center;transition:transform .15s,box-shadow .15s}
+.bk:hover,.bk:focus-visible{transform:translateY(-3px) rotate(-1.5deg);box-shadow:inset 6px 0 0 rgba(0,0,0,.22),inset 7px 0 0 rgba(255,255,255,.12),0 2px 4px rgba(0,0,0,.2),0 10px 18px rgba(0,0,0,.18)}
+.bk svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;margin-inline-start:4px;opacity:.95}
+.bk::after{content:"";position:absolute;left:12px;right:6px;bottom:9px;height:2px;background:rgba(255,255,255,.55);border-radius:1px}
+.bk .yr{position:absolute;top:5px;left:10px;right:4px;font-size:9.5px;line-height:1;font-weight:600;text-align:center;opacity:.85;font-variant-numeric:tabular-nums;direction:ltr}
+.bk.nodate .yr{opacity:.55}
+.btip{position:fixed;z-index:20;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12.5px;box-shadow:var(--shadow);max-width:240px;line-height:1.45}
+.btip b{display:block;font-size:13.5px}
+.btip small{color:var(--muted)}
+.shelf-h{display:flex;align-items:center;gap:10px;margin-top:16px}
+.shelf-h .ava{cursor:pointer}
+/* book card */
+dialog.bcard{border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--ink);padding:0;width:min(460px,calc(100vw - 32px));max-height:calc(100vh - 48px);box-shadow:var(--shadow)}
+dialog.bcard::backdrop{background:rgba(10,16,15,.45)}
+.bc-in{padding:20px;overflow:auto;max-height:calc(100vh - 50px)}
+.bc-top{display:flex;gap:16px;align-items:flex-start}
+.bc-top .bk{width:74px;height:104px;cursor:default;flex:none}
+.bc-top .bk:hover{transform:none}
+.bc-top .bk svg{width:32px;height:32px}
+.bc-top .bk .yr{font-size:12px;top:8px}
+.bc-close{position:absolute;top:10px;inset-inline-end:10px;width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:18px;line-height:1}
+.bc-kind{display:inline-block;font-size:12px;font-weight:600;color:var(--muted);background:var(--chip);border-radius:6px;padding:1px 8px}
+.bc-auth{display:flex;align-items:center;gap:8px;margin-top:14px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;width:100%;background:none;cursor:pointer;text-align:start}
+.bc-auth:hover{background:var(--chip)}
+.credits{display:flex;flex-direction:column;gap:6px;margin-top:8px;font-size:12.5px}
+.credits a{color:var(--accent)}
+.credit{font-size:11.5px;color:var(--muted);margin-top:6px}
+.credit a{color:inherit}
+/* group logos: real emblem on a white disc, or a monogram in the group's colour */
+.glogo{flex:none;display:inline-grid;place-items:center;border-radius:50%;background:#fff;border:2px solid var(--gc);overflow:hidden;width:30px;height:30px;vertical-align:middle}
+.glogo img{width:76%;height:76%;object-fit:contain}
+.glogo.mono{background:var(--gc);color:#fff;font-weight:700;font-family:var(--body);font-size:11px;line-height:1;letter-spacing:-.02em}
+.glogo-sm{width:20px;height:20px;font-size:8.5px!important;border-width:1.5px}
+.glogo-lg{width:68px;height:68px;font-size:22px!important;border-width:3px}
+.ghead{display:flex;gap:14px;align-items:center;margin-top:10px}
+.gbadge{cursor:pointer}
+.gmono{fill:#fff;font-size:8.5px;font-weight:700;pointer-events:none;font-family:var(--body)}
+.gmore{font-size:10px;font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--sea);stroke-width:3px;pointer-events:none}
+/* figure search scope */
+.scope{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:6px}
+.scope button{flex:1;border:0;background:none;padding:5px 6px;cursor:pointer;color:var(--muted);font-size:12.5px;font-weight:600;white-space:nowrap}
+.scope button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.range{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:13px;color:var(--muted)}
+.range input{width:84px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit;font-variant-numeric:tabular-nums}
+.alsohint{background:none;border:1px dashed var(--line);border-radius:8px;padding:6px 10px;margin-top:8px;width:100%;text-align:start;cursor:pointer;color:var(--accent);font-weight:600;font-size:13px}
+/* legend as a collapsible panel */
+.legend summary{cursor:pointer;font-weight:600;color:var(--muted);list-style:none;grid-column:1/-1}
+.legend summary::-webkit-details-marker{display:none}
+.legend summary::before{content:"▸ ";display:inline-block}
+.legend[open] summary::before{content:"▾ "}
+.legend[open] summary{margin-bottom:4px}
+@media (max-width:860px){
+  .app{height:auto}
+  .main{grid-template-columns:1fr}
+  .mapcol{order:-1}
+  .mapbox{height:56vh}
+  .pbody{overflow:visible}
+  .legend{font-size:11px}
+  .eventcap{top:56px}
+}
+@media (max-width:520px){ .scale .s-narrow-hide{display:none} .tab{font-size:14px;padding:10px 2px} }
+.tab{white-space:nowrap}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <header>
+    <div>
+      <h1 id="h1">أطلس الجماعات الإسلامية</h1>
+      <p class="sub" id="sub"></p>
+    </div>
+    <div class="lang" role="group" aria-label="Language">
+      <button id="lang-ar" aria-pressed="true">العربية</button>
+      <button id="lang-en" aria-pressed="false">English</button>
+    </div>
+  </header>
+  <div class="main">
+    <aside class="panel">
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="tab-people" aria-selected="true"></button>
+        <button class="tab" role="tab" id="tab-groups" aria-selected="false"></button>
+        <button class="tab" role="tab" id="tab-books" aria-selected="false"></button>
+        <button class="tab" role="tab" id="tab-about" aria-selected="false"></button>
+      </div>
+      <div class="pbody" id="pbody"><div class="loading">…</div></div>
+    </aside>
+    <section class="mapcol">
+      <div class="mapbox" id="mapbox">
+        <svg id="map" role="img"><defs id="defs"></defs></svg>
+        <div class="yearbig" id="yearbig">1928</div>
+        <div class="eventcap" id="eventcap"></div>
+        <div class="layer-toggle" role="group">
+          <button id="lay-sel" aria-pressed="true"></button>
+          <button id="lay-all" aria-pressed="false"></button>
+        </div>
+        <div class="mapctl">
+          <button id="zin" aria-label="+">+</button>
+          <button id="zout" aria-label="−">−</button>
+          <button id="zreset" aria-label="reset">⟲</button>
+        </div>
+        <details class="legend" id="legendbox" open><summary id="legend-t"></summary><div class="lg" id="legend"></div></details>
+        <div class="tip" id="tip" hidden></div>
+      </div>
+      <div class="timeline">
+        <button class="play" id="play"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path id="playicon" d="M4 2l10 6-10 6z"/></svg></button>
+        <div class="track">
+          <div class="ticks" id="ticks"></div>
+          <input type="range" id="slider" min="0" max="1000" step="1">
+          <div class="scale" id="scale"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+<div class="btip" id="btip" hidden></div>
+<dialog class="bcard" id="bcard"><div class="bc-in" id="bcard-in"></div></dialog>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+<script>
+(function(){
+const NOW = 2026, Y0 = 1260, YB = 1900;
+const PARTS = ["Vx9PQBayChs","RV1neB3zZM0","1i3N2PGazmk","V0ANA-clwL4","a5-eyetMmfI","gOzuGAPE-rU","M0QD4LJuD-0","XjVmhusFRMY","FjiGt0tlfHs","Ks4wuTOGC30"];
+const UI = {
+ ar:{title:"أطلس الجماعات الإسلامية",sub:"كل شخصية وجماعة ذكرها الشيخ أحمد بن خالد الهاجري في «سلسلة الجماعات الإسلامية» (10 مقاطع)، على الخريطة وعبر الزمن",
+  tabs:["الشخصيات","الجماعات","الكتب","عن الأطلس"],laySel:"انتشار المختارة",layAll:"كل الجماعات",legend:"دليل الألوان",
+  ctry:{eg:"مصر",sa:"السعودية",sy:"سوريا",fr:"فرنسا",tn:"تونس",af:"أفغانستان",ly:"ليبيا",dz:"الجزائر",ma:"المغرب",lb:"لبنان",tr:"تركيا",ps:"فلسطين",et:"الحبشة (إثيوبيا)",al:"ألبانيا",pk:"باكستان",in:"الهند",ir:"إيران",iq:"العراق",kw:"الكويت",us:"الولايات المتحدة",sd:"السودان"},
+  kind:{book:"كتاب",magazine:"مجلة",poem:"قصيدة",thesis:"رسالة علمية",lecture:"محاضرة",tapes:"سلسلة أشرطة",fatwa:"فتوى",program:"برنامج",works:"مجموعة ردود"},
+  noDate:"التاريخ غير معروف",by:"المؤلف",close:"إغلاق",openAuthor:"افتح بطاقة المؤلف",
+  booksHint:(n,a)=>`${n} عملًا لـ${a} شخصية ذكرها الشيخ في السلسلة، مرتبة بالزمن. مرّر المؤشر على أي كتاب لترى اسمه وتاريخه، واضغط عليه لتفتح بطاقته.`,
+  era:{e0:"قبل 1900",e1:'<bdi dir="ltr">1900–1949</bdi>',e2:'<bdi dir="ltr">1950–1979</bdi>',e3:'<bdi dir="ltr">1980–1999</bdi>',e4:"منذ 2000",e5:"غير مؤرخة"},
+  creditsT:"مصادر الصور",photo:"الصورة:",logo:"الشعار:",
+  scope:{year:y=>`في ${y}`,all:"كل السنوات",range:"فترة"},from:"من",to:"إلى",
+  inRange:(a,b,n)=>`أحياء بين ${a} و${b} (${n})`,allList:n=>`كل الشخصيات (${n})`,alsoOther:n=>`${n} نتيجة أخرى في سنوات أخرى، ابحث في كل السنوات ←`,
+  mono:{urwa:"عو",nizam:"نخ",tabligh:"تب",muwahhad:"تم",sururi:"سر",qutbcur:"قط",khaliqdawa:"عخ",ahlsunna:"أس",shabiba:"شب",shukri:"شك",jihadorg:"جه",gamaa:"جإ",sahwa:"صح",jihadi:"تج",jamiyya:"جا",turabi:"تر",turkpol:"عت",ennahda:"نه",egsalafi:"سم",raya:"را",isis:"دا",newsahwa:"صج"},
+  parts:["أهمية دراسة تاريخ الجماعات","إرهاصات ظهور الجماعات","تأسيس الإخوان وعبقرية البنا","أزمة القيادة بعد البنا","سيد قطب وسد الفراغ","تعدد الجماعات","صراع الجماعات وظهور الجامية","الربيع العربي وتجربة الحكم","ما بعد الربيع","بداية الظهور الجديد"],
+  cat:{leader:"قائد حركي / مؤسس",scholar:"عالم",preacher:"داعية / واعظ",thinker:"مفكر / أديب",fighter:"مجاهد / مقاوم",ruler:"حاكم / سياسي",adversary:"خصم",other:"أخرى"},
+  role:{f:"مؤسس",l:"قائد",m:"عضو",a:"مناصر",i:"متأثر بها",x:"خرج منها",o:"خصم"},
+  creed:{salafi:"سلفي","salafi-notes":"سلفي مع ملاحظات",rational:"المدرسة العقلية",sufi:"صوفي",shia:"شيعي",jami:"جامي",secular:"علماني / تغريبي",other:"غير مسلم",none:"لم يصنّفه الشيخ"},
+  st:{jihad:"الجهاد والقوة طريقًا",dawah:"الدعوة وبيان التصورات",tarbiya:"التربية",politics:"المشاركة السياسية والبرلمان",nopolitics:"يرفض الدخول في السياسة",scholarship:"العلم الشرعي",preach:"الوعظ والخطابة",resist:"مقاومة الاستعمار",peaceful:"المسالمة والتدرج",izza:"العزة الإيمانية",loyalist:"الاصطفاف مع السلطة ضد الحركات",secular:"خصم لأصول الإسلام أو للحركات"},
+  verdict:{"-2":"سلبي جدًا","-1":"سلبي","0":"محايد","1":"إيجابي","2":"إيجابي جدًا"},
+  neg:"سلبي",neu:"محايد",pos:"إيجابي",
+  hint:"حرّك شريط الزمن أسفل الخريطة لترى من كان حيًّا وأين كان. اضغط على أي نقطة أو اسم لتفتح بطاقته.",
+  search:"ابحث عن اسم…",results:n=>`نتائج البحث (${n})`,noMatch:"لا توجد نتائج لهذا الاسم.",aliveIn:(y,n,t)=>`أحياء في سنة ${y} (${n} من ${t})`,nobody:"لا أحد في هذا التاريخ.",
+  allPeople:"→ كل الشخصيات",allGroups:"→ كل الجماعات",notBorn:(y,b)=>`لم يولد بعد في ${y}، وُلد سنة ${b}`,died:d=>`توفي سنة ${d}`,
+  notYet:(g,y)=>`لم ينضم بعد إلى ${g} (من ${y})`,ended:(g,y)=>`انتهت صلته بـ${g} سنة ${y}`,noGroup:"غير منتمٍ إلى جماعة بحسب السلسلة",inYear:y=>`في ${y}:`,
+  readMore:"اقرأ أكثر",hide:"أخفِ",why:"لماذا؟",sheikhView:"رأي الشيخ فيه",creedT:"العقيدة والمنهج (بحسب الشيخ)",books:"الكتب والأعمال",
+  hisViews:"موقفه من الآخرين",othersViews:"مواقف الآخرين منه",journey:"رحلته عبر الأماكن",mentioned:"ذُكر في المقاطع",notVisible:"غير ظاهر في هذه السنة",
+  noteP:"الآراء والتقييمات من كلام الشيخ في السلسلة. التواريخ والأماكن والبلد من المعرفة التاريخية العامة وقد تكون تقريبية (~). الصور من ويكيبيديا وويكيميديا كومنز بترخيص حر، ومن لا صورة حرة له يظهر بالحرف الأول من اسمه.",
+  groupsHint:y=>`الجماعات مرتبة بسنة التأسيس. الباهتة لم تُؤسس بعد أو انتهت في سنة ${y}. اضغط على جماعة لترى انتشارها على الخريطة وأعضاءها.`,
+  groupKind:"جماعة / تيار",founded:"تأسست",endedG:"انتهت",activeIn:(y,n)=>`نشطة في ${y}، ظاهرة في ${n} دولة على الخريطة`,notFounded:y=>`لم تُؤسس بعد في ${y}`,endedBefore:y=>`انتهت قبل ${y}`,
+  founding:"التأسيس",founder:"المؤسس:",linked:"شخصيات مرتبطة بها",noteG:"مناطق الانتشار على الخريطة تقريبية ومستخلصة من كلام الشيخ والمعرفة العامة، وليست حدودًا دقيقة. الشعارات من ويكيميديا كومنز بترخيص حر، والجماعات التي لا شعار حرًّا لها تظهر برمز مختصر بلونها.",
+  aboutT:"عن هذا الأطلس",about:(p,g)=>`أطلس تفاعلي مبني على سلسلة «الجماعات الإسلامية» للشيخ أحمد بن خالد الهاجري (قناة كيان المعرفة). يضم ${p} شخصية و${g} جماعة وتيارًا ذكرها الشيخ، من ابن تيمية إلى الصحوة الجديدة.`,
+  howT:"كيف تستخدمه",how:"حرّك شريط الزمن، أو اضغط ▶ لتشغيله، أو اضغط على علامات الأحداث فوقه. تنتقل النقاط بين المدن مع تنقّل أصحابها. اضغط على شخصية لترى جماعتها في تلك السنة، ورأي الشيخ فيها، ومنهجها، وكتبها، وخطوطًا ملوّنة إلى من له موقف منهم. مقياس المواقف: 😠 السلبي يسارًا، 😐 المحايد في الوسط، 😄 الإيجابي يمينًا. على الخريطة: الأخضر إيجابي، الأحمر سلبي، المتقطع محايد. يظهر شعار كل جماعة نشطة في مكان تأسيسها، وعند اختيار جماعة يظهر شعارها على كل دولة انتشرت فيها، وفي وضع «كل الجماعات» تُلوَّن كل دولة بخطوط بألوان الجماعات الموجودة فيها. كبّر الخريطة لتظهر صور الجميع.",
+  iconsT:"رموز المنهج",partsT:"المقاطع",noteA:"كل الآراء والتقييمات والتصنيفات منسوبة إلى الشيخ كما وردت في السلسلة. حين لا يصنّف الشيخ شخصًا عقديًا يُكتب «لم يصنّفه الشيخ». التواريخ والأماكن والانتشار الجغرافي من المعرفة التاريخية العامة وقد تكون تقريبية. استُخرج النص من الترجمة الآلية في يوتيوب.",
+  loadErr:"تعذّر تحميل البيانات. أعد تحميل الصفحة."},
+ en:{title:"Atlas of Islamic Movements",sub:"Every figure and group Sheikh Ahmad bin Khalid al-Hajri mentions in his 10-part series on Islamic groups, on a map and through time",
+  tabs:["Figures","Groups","Books","About"],laySel:"Selected group",layAll:"All groups",legend:"Colour key",
+  ctry:{eg:"Egypt",sa:"Saudi Arabia",sy:"Syria",fr:"France",tn:"Tunisia",af:"Afghanistan",ly:"Libya",dz:"Algeria",ma:"Morocco",lb:"Lebanon",tr:"Turkey",ps:"Palestine",et:"Ethiopia",al:"Albania",pk:"Pakistan",in:"India",ir:"Iran",iq:"Iraq",kw:"Kuwait",us:"United States",sd:"Sudan"},
+  kind:{book:"Book",magazine:"Magazine",poem:"Poem",thesis:"Thesis",lecture:"Lecture",tapes:"Tape series",fatwa:"Fatwa",program:"Programme",works:"Collected refutations"},
+  noDate:"Date unknown",by:"Author",close:"Close",openAuthor:"Open the author's card",
+  booksHint:(n,a)=>`${n} works by ${a} figures the sheikh mentions, in time order. Hover over a book to see its title and date; click it to open its card.`,
+  era:{e0:"Before 1900",e1:"1900–1949",e2:"1950–1979",e3:"1980–1999",e4:"Since 2000",e5:"Undated"},
+  creditsT:"Image credits",photo:"Photo:",logo:"Logo:",
+  scope:{year:y=>`In ${y}`,all:"All years",range:"Period"},from:"From",to:"to",
+  inRange:(a,b,n)=>`Alive between ${a} and ${b} (${n})`,allList:n=>`All figures (${n})`,alsoOther:n=>`${n} more in other years. Search all years →`,
+  mono:{urwa:"UW",nizam:"SA",tabligh:"TJ",muwahhad:"UO",sururi:"SR",qutbcur:"QC",khaliqdawa:"AK",ahlsunna:"AS",shabiba:"SY",shukri:"SM",jihadorg:"EIJ",gamaa:"GI",sahwa:"SW",jihadi:"JC",jamiyya:"MD",turabi:"TM",turkpol:"AKP",ennahda:"EN",egsalafi:"ES",raya:"RP",isis:"IS",newsahwa:"NS"},
+  parts:["Why study the groups' history","Forerunners of the groups","The Brotherhood and al-Banna's genius","Leadership crisis after al-Banna","Sayyid Qutb fills the gap","Groups multiply","Group conflict and the Jamiyya","Arab Spring and the test of power","After the Spring","The new emergence"],
+  cat:{leader:"Movement leader / founder",scholar:"Scholar",preacher:"Preacher",thinker:"Thinker / writer",fighter:"Fighter / resistance",ruler:"Ruler / politician",adversary:"Adversary",other:"Other"},
+  role:{f:"Founder",l:"Leader",m:"Member",a:"Supporter",i:"Influenced by it",x:"Left it",o:"Opponent"},
+  creed:{salafi:"Salafi","salafi-notes":"Salafi, with reservations",rational:"Rationalist school",sufi:"Sufi",shia:"Shi'a",jami:"Jami",secular:"Secular / Westernising",other:"Non-Muslim",none:"Not classified by the sheikh"},
+  st:{jihad:"Jihad / force as the path",dawah:"Dawah and ideas",tarbiya:"Spiritual formation (tarbiya)",politics:"Political / parliamentary participation",nopolitics:"Rejects entering politics",scholarship:"Islamic scholarship",preach:"Preaching",resist:"Anti-colonial resistance",peaceful:"Conciliation and gradualism",izza:"Pride in faith",loyalist:"Sides with rulers against movements",secular:"Opposes Islam's foundations or the movements"},
+  verdict:{"-2":"Very negative","-1":"Negative","0":"Neutral","1":"Positive","2":"Very positive"},
+  neg:"Negative",neu:"Neutral",pos:"Positive",
+  hint:"Move the timeline under the map to see who was alive and where. Click any dot or name to open their card.",
+  search:"Search a name…",results:n=>`Search results (${n})`,noMatch:"No figure matches that name.",aliveIn:(y,n,t)=>`Alive in ${y} (${n} of ${t})`,nobody:"Nobody at this date.",
+  allPeople:"← All figures",allGroups:"← All groups",notBorn:(y,b)=>`Not yet born in ${y}; born ${b}`,died:d=>`Died ${d}`,
+  notYet:(g,y)=>`Has not yet joined ${g} (from ${y})`,ended:(g,y)=>`Tie to ${g} ended in ${y}`,noGroup:"Not in any group, per the series",inYear:y=>`In ${y}:`,
+  readMore:"Read more",hide:"Hide",why:"Why?",sheikhView:"The sheikh's view of him",creedT:"Creed and method (per the sheikh)",books:"Books and works",
+  hisViews:"His stance on others",othersViews:"Others' stance on him",journey:"His journey",mentioned:"Mentioned in episodes",notVisible:"not on the map this year",
+  noteP:"Opinions and judgments are the sheikh's, from the series. Dates, places and country of origin come from general historical knowledge and may be approximate (~). Portraits are freely licensed images from Wikipedia and Wikimedia Commons; figures without one show their initial.",
+  groupsHint:y=>`Groups ordered by founding year. Faded ones did not yet exist or had ended by ${y}. Click a group to see its spread and members.`,
+  groupKind:"Group / current",founded:"Founded",endedG:"ended",activeIn:(y,n)=>`Active in ${y}, shown in ${n} countries`,notFounded:y=>`Not yet founded in ${y}`,endedBefore:y=>`Ended before ${y}`,
+  founding:"Founding",founder:"Founder:",linked:"Linked figures",noteG:"Map areas are approximate, drawn from the sheikh's words and general knowledge, not precise borders. Logos are freely licensed files from Wikimedia Commons; groups without a free logo show a short monogram in their colour.",
+  aboutT:"About this atlas",about:(p,g)=>`An interactive atlas based on Sheikh Ahmad bin Khalid al-Hajri's series on Islamic groups (Keyan al-Ma'rifa channel). It covers ${p} figures and ${g} groups and currents he mentions, from Ibn Taymiyya to the new Sahwa.`,
+  howT:"How to use it",how:"Drag the timeline, press ▶ to play it, or click the event marks above it. Dots move between cities as people did. Click a figure to see their group that year, the sheikh's view of them, their method, books, and coloured lines to people they held views on. The opinion scale: 😠 negative on the left, 😐 neutral in the middle, 😄 positive on the right. On the map: green is positive, red negative, dashed neutral. Each active group shows its logo where it was founded; pick a group to see its logo on every country it spread to. In “All groups” mode each country is striped in the colours of the groups present there. Zoom in to see everyone's portrait.",
+  iconsT:"Method icons",partsT:"Episodes",noteA:"All opinions, judgments and classifications are attributed to the sheikh as stated in the series. Where he does not classify someone's creed, the card says so. Dates, places and geographic spread come from general historical knowledge and may be approximate. The text was taken from YouTube's automatic captions; English is a translation.",
+  loadErr:"Could not load the data. Reload the page."}
+};
+const CREEDC = {salafi:"var(--pos)","salafi-notes":"#c99a2e",rational:"#c7811c",sufi:"#7a5aa6",shia:"#8c2f39",jami:"#6e6e6e",secular:"var(--neg)",other:"var(--neu)",none:"var(--neu)"};
+const STP = {
+ jihad:"M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2M9.5 6.5 13 3h3v3l-3.5 3.5M5 14l4 4M7 17l-3 3M3 19l2 2",
+ dawah:"M4 5h16v10H9l-5 4z", tarbiya:"M12 21v-9M12 12c0-4 3-7 8-7 0 5-3 7-8 7zM12 14c0-3-2-5-7-5 0 4 2 5 7 5z",
+ politics:"M3 9l9-5 9 5M5 9v9M10 9v9M14 9v9M19 9v9M3 20h18", nopolitics:"M3 9l9-5 9 5M5 9v9M10 9v9M14 9v9M19 9v9M3 20h18M2 2l20 20",
+ scholarship:"M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 21V5", preach:"M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM5 11a7 7 0 0 0 14 0M12 18v3",
+ resist:"M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z", peaceful:"M5 19c0-8 6-14 14-14 0 8-6 14-14 14zM5 19l7-7",
+ izza:"M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z", loyalist:"M3 8l4 4 5-7 5 7 4-4-2 11H5z",
+ secular:"M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM5.6 5.6l12.8 12.8"
+};
+const NEG_ST = new Set(["loyalist","secular"]);
+const FACE = {"-2":"😠","-1":"🙁","0":"😐","1":"🙂","2":"😄"};
+const TABS = ["people","groups","books","about"];
+
+let LOGO = {}, scope = "year", rFrom = 1950, rTo = 1980;
+try { const s = JSON.parse(localStorage.getItem("atlas-scope") || "null"); if (s && ["year","all","range"].includes(s.scope)) { scope = s.scope; rFrom = +s.from || rFrom; rTo = +s.to || rTo; } } catch(e) {}
+let D, EN, IMG = {}, CRED = {}, BOOKS = [], lastKey = "", P, G, PI = {}, GI = {}, year = 1928, selP = null, selG = null, layerAll = false, playing = null, tab = "people", transform = d3.zoomIdentity, q = "";
+let lang = "ar"; try { lang = localStorage.getItem("atlas-lang") || "ar"; } catch(e) {}
+const T = () => UI[lang];
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+// piecewise timeline: the medieval stretch (only three figures) is squeezed into the first 5%
+const TL = [[Y0, 0], [1790, 0.05], [YB, 0.15], [NOW, 1]];
+const toPos = y => { for (let i = 1; i < TL.length; i++) if (y <= TL[i][0] || i === TL.length - 1) { const [a, pa] = TL[i - 1], [b, pb] = TL[i]; return pa + (Math.min(y, b) - a) / (b - a) * (pb - pa); } };
+const toYear = p => { for (let i = 1; i < TL.length; i++) if (p <= TL[i][1] || i === TL.length - 1) { const [a, pa] = TL[i - 1], [b, pb] = TL[i]; return Math.round(a + (p - pa) / (pb - pa) * (b - a)); } };
+const norm = s => String(s || "").normalize("NFD").replace(/[̀-ًͯ-ٰٕـ'ʿʾ’`-]/g, "").toLowerCase()
+  .replace(/[أإآٱ]/g, "ا").replace(/ة/g, "ه").replace(/ى/g, "ي").replace(/ؤ/g, "و").replace(/ئ/g, "ي").replace(/\s+/g, " ").trim();
+const KIND = {
+ book: "M5 4h10a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3zM5 17a3 3 0 0 1 3-3h10M9 8h5",
+ magazine: "M4 4h16v16H4zM4 9h16M8 13h8M8 16h5",
+ poem: "M7 4c3 0 3 3 6 3s3-3 6-3M7 10c3 0 3 3 6 3s3-3 6-3M7 16c3 0 3 3 6 3s3-3 6-3",
+ thesis: "M3 9l9-4 9 4-9 4zM7 11v5c3 2 7 2 10 0v-5M21 9v5",
+ lecture: "M12 3a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM5 11a7 7 0 0 0 14 0M12 18v3",
+ tapes: "M3 6h18v12H3zM8 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M16 12m-2 0a2 2 0 1 0 4 0a2 2 0 1 0-4 0M8 14h8",
+ fatwa: "M6 3h9l4 4v14H6zM14 3v5h5M9 12h7M9 16h5",
+ program: "M3 5h18v12H3zM8 21h8M12 17v4M10 9l5 2-5 2z",
+ works: "M4 6h12M4 10h12M4 14h12M4 18h8M19 5v14"
+};
+const COVER = ["#6b3f2a","#2f4f6b","#5a3a6e","#2f5e4e","#7a5a1e","#6e2f3a","#3d4a5c","#4e5a2a"];
+const hashStr = s => { let h = 0; for (const ch of s) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return h; };
+
+/* ---------- localized accessors ---------- */
+const pe = p => (lang === "en" && EN.people[p.id]) || null;
+const nm = p => pe(p)?.n || p.n;
+const pf = (p, k) => (pe(p) && pe(p)[k]) || p[k];
+const crT = p => pe(p)?.cr || p.cr.t;
+const bookAt = (p, i) => { const e = pe(p)?.bk?.[i]; const b = p.bk[i]; return Object.assign({}, b, e ? {t: e[0], s: e[1], l: e[2]} : {}); };
+const bkYear = b => b.y ? `${b.ya ? "~" : ""}${b.y}` : "";
+const relTxt = (fromP, toId, r) => { const e = pe(fromP)?.rel?.[toId]; return e ? [e[0], e[1]] : [r[2], r[3]]; };
+const gn = g => (lang === "en" && EN.groups[g.id]?.n) || g.n;
+const gf = (g, k) => (lang === "en" && EN.groups[g.id]?.[k]) || g[k];
+const cityName = c => lang === "en" ? (EN.cities[c] || c) : (D.cities[c] || [c])[0];
+const yrs = p => `<bdi dir="ltr">${p.ap ? "~" : ""}${p.b}${p.d ? "–" + p.d : "–"}</bdi>`;
+const evText = i => lang === "en" ? EN.events[i] : D.events[i][1];
+function avatar(p, size){
+  const src = IMG[p.id];
+  if (src) return `<img class="ava ava-${size}" style="--cat:var(--c-${p.cat})" src="${src}" alt="" loading="lazy">`;
+  const ch = nm(p).replace(/^(al-|Al-|ال)/, "").trim().charAt(0);
+  return `<span class="ava ava-${size}" style="--cat:var(--c-${p.cat})" aria-hidden="true">${esc(ch)}</span>`;
+}
+const mono = g => T().mono[g.id] || gn(g).replace(/^(al-|Al-|The |ال)/, "").charAt(0);
+function glogo(g, size){
+  const lg = LOGO[g.id], cls = `glogo${size ? " glogo-" + size : ""}`;
+  return lg ? `<span class="${cls}" style="--gc:${g.c}" title="${esc(gn(g))}"><img src="${lg.src}" alt=""></span>`
+            : `<span class="${cls} mono" style="--gc:${g.c}" title="${esc(gn(g))}">${esc(mono(g))}</span>`;
+}
+const ctryName = c => T().ctry[c] || c;
+const flagImg = (p, cls) => p.c ? `<img class="${cls}" src="img/flags/${p.c}.svg" alt="${esc(ctryName(p.c))}" title="${esc(ctryName(p.c))}">` : "";
+const credit = p => { const c = CRED[p.id]; if (!c) return ""; return `<p class="credit">${T().photo} <a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.artist || c.file)}</a> · ${esc(c.license)}</p>`; };
+
+/* ---------- books ---------- */
+function bookIcon(p, i, tag){
+  const b = bookAt(p, i), k = p.id + "." + i, y = bkYear(b);
+  const cv = COVER[hashStr(p.id + i) % COVER.length];
+  const inner = `<span class="yr">${y || "—"}</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${KIND[b.k] || KIND.book}"/></svg>`;
+  if (tag === "div") return `<div class="bk${y ? "" : " nodate"}" style="--cv:${cv}">${inner}</div>`;
+  return `<button class="bk${y ? "" : " nodate"}" style="--cv:${cv}" data-bk="${k}" aria-label="${esc(b.t)} — ${y || T().noDate}">${inner}</button>`;
+}
+const shelf = p => `<div class="shelf">${p.bk.map((_, i) => i).sort((a, c) => (p.bk[a].y || 9999) - (p.bk[c].y || 9999)).map(i => bookIcon(p, i)).join("")}</div>`;
+function bookTipHTML(key){
+  const [pid, i] = key.split("."), p = PI[pid], b = bookAt(p, +i);
+  return `<b>${esc(b.t)}</b><small>${T().kind[b.k]} · ${bkYear(b) ? `<bdi dir="ltr">${bkYear(b)}</bdi>` : T().noDate}</small><br><small>${esc(nm(p))}</small>`;
+}
+function showBookTip(el){
+  const t = $("#btip"); t.innerHTML = bookTipHTML(el.dataset.bk); t.hidden = false;
+  const r = el.getBoundingClientRect(), w = t.offsetWidth, h = t.offsetHeight;
+  let x = r.left + r.width / 2 - w / 2; x = Math.max(8, Math.min(x, innerWidth - w - 8));
+  let y = r.top - h - 8; if (y < 8) y = r.bottom + 8;
+  t.style.left = x + "px"; t.style.top = y + "px";
+}
+const hideBookTip = () => { $("#btip").hidden = true; };
+let openKey = null;
+function openBook(key){
+  const [pid, i] = String(key).split("."), p = PI[pid]; if (!p || !p.bk[+i]) return;
+  const t = T(), b = bookAt(p, +i), dlg = $("#bcard"); openKey = key; hideBookTip();
+  $("#bcard-in").innerHTML = `<button class="bc-close" data-close aria-label="${t.close}">×</button>
+    <div class="bc-top">${bookIcon(p, +i, "div")}<div style="min-width:0;padding-inline-end:28px"><span class="bc-kind">${t.kind[b.k]}</span>
+    <h2 style="font-size:21px;margin-top:6px">${esc(b.t)}</h2><div class="meta">${bkYear(b) ? `<bdi dir="ltr">${bkYear(b)}</bdi>` : t.noDate}</div></div></div>
+    <p class="lead">${esc(b.s)}</p>${b.l ? `<p class="long">${esc(b.l)}</p>` : ""}
+    <button class="bc-auth" data-author="${p.id}" title="${t.openAuthor}"><span class="ava-wrap">${avatar(p, "sm")}</span><span class="nm" style="display:flex;flex-direction:column;line-height:1.35"><small class="meta">${t.by}</small><b>${esc(nm(p))}</b></span><small class="meta" style="margin-inline-start:auto">${yrs(p)}</small></button>`;
+  if (!dlg.open) dlg.showModal();
+  writeHash();
+}
+$("#bcard").addEventListener("click", e => {
+  const d = $("#bcard");
+  if (e.target === d || e.target.closest("[data-close]")) { d.close(); return; }   // backdrop or × closes
+  const a = e.target.closest("[data-author]"); if (a){ d.close(); selectPerson(a.dataset.author, true); }
+});
+$("#bcard").addEventListener("close", () => { openKey = null; writeHash(); });
+// one floating tooltip for every book icon on the page (hover or keyboard focus)
+document.addEventListener("mouseover", e => { const el = e.target.closest && e.target.closest("button.bk"); if (el) showBookTip(el); });
+document.addEventListener("mouseout", e => { const el = e.target.closest && e.target.closest("button.bk"); if (el && !el.contains(e.relatedTarget)) hideBookTip(); });
+document.addEventListener("focusin", e => { if (e.target.matches && e.target.matches("button.bk")) showBookTip(e.target); });
+document.addEventListener("focusout", e => { if (e.target.matches && e.target.matches("button.bk")) hideBookTip(); });
+document.addEventListener("scroll", hideBookTip, true);
+function booksHTML(){
+  const t = T(), eraOf = y => !y ? "e5" : y < 1900 ? "e0" : y < 1950 ? "e1" : y < 1980 ? "e2" : y < 2000 ? "e3" : "e4";
+  const groups = d3.group(BOOKS, x => eraOf(x.p.bk[x.i].y));
+  const authors = new Set(BOOKS.map(x => x.p.id)).size;
+  return `<p class="hint">${t.booksHint(BOOKS.length, authors)}</p>
+  ${["e0","e1","e2","e3","e4","e5"].filter(e => groups.has(e)).map(e => `<div class="eyebrow">${t.era[e]} · ${groups.get(e).length}</div><div class="shelf">${groups.get(e).map(x => bookIcon(x.p, x.i)).join("")}</div>`).join("")}`;
+}
+
+const optJSON = u => fetch(u).then(r => r.ok ? r.json() : {}).catch(() => ({}));
+Promise.all([fetch("data.json").then(r => r.json()), fetch("data_en.json").then(r => r.json()), fetch("world.json").then(r => r.json()), optJSON("img/index.json"), optJSON("img/credits.json"), optJSON("img/logos/index.json")]).then(([data, en, world, img, cred, logos]) => {
+  D = data; EN = en; IMG = img; CRED = cred; LOGO = logos; P = D.people; G = D.groups;
+  P.forEach(p => PI[p.id] = p); G.forEach(g => GI[g.id] = g);
+  P.forEach(p => p.inc = []);
+  P.forEach(p => p.rel.forEach(r => { if (PI[r[0]]) PI[r[0]].inc.push([p.id, r[1], r[2], r[3]]); }));
+  P.forEach(p => p.bk.forEach((b, i) => BOOKS.push({p, i, key: p.id + "." + i})));
+  BOOKS.sort((a, b) => (a.p.bk[a.i].y || 9999) - (b.p.bk[b.i].y || 9999) || a.p.b - b.p.b);
+  if (matchMedia("(max-width:860px)").matches) $("#legendbox").open = false;
+  initMap(world); initTimeline(); initTabs(); applyLang();
+  const st = readHash();
+  setYear(st.y || 1928, true);
+  if (st.p && PI[st.p]) selectPerson(st.p, !st.y); else if (st.g && GI[st.g]) selectGroup(st.g); else { if (st.tab) tab = st.tab; render(); }
+  if (st.b) openBook(st.b);
+  window.addEventListener("hashchange", () => { if (location.hash.slice(1) === lastHash) return; const s = readHash(); if (s.y) setYear(s.y, true); if (s.p && PI[s.p]) selectPerson(s.p, !s.y); else if (s.g && GI[s.g]) selectGroup(s.g); else { selP = selG = null; tab = s.tab || "people"; paintCountries(); drawDots(false); render(); } if (s.b) openBook(s.b); });
+}).catch(err => { $("#pbody").innerHTML = `<p class="hint">${T().loadErr}</p>`; console.error(err); });
+
+/* ---------- shareable links: #p=qutb&y=1952, #g=ikhwan, #tab=books, #b=qutb.1 ---------- */
+let lastHash = "", hashTimer = null;
+function readHash(){
+  const h = new URLSearchParams(location.hash.slice(1)), o = {};
+  if (h.get("p")) o.p = h.get("p"); if (h.get("g")) o.g = h.get("g"); if (h.get("b")) o.b = h.get("b");
+  if (["people","groups","books","about"].includes(h.get("tab"))) o.tab = h.get("tab");
+  const y = parseInt(h.get("y"), 10); if (y >= Y0 && y <= NOW) o.y = y;
+  return o;
+}
+function writeHash(){
+  clearTimeout(hashTimer);
+  hashTimer = setTimeout(() => {
+    const h = new URLSearchParams();
+    if (selP && tab === "people") h.set("p", selP); else if (selG && tab === "groups") h.set("g", selG); else if (tab !== "people") h.set("tab", tab);
+    if (openKey) h.set("b", openKey);
+    h.set("y", year);
+    const s = h.toString(); if (s === lastHash) return; lastHash = s;
+    try { history.replaceState(null, "", "#" + s); } catch(e) {}
+  }, 250);
+}
+
+/* ---------- language ---------- */
+function applyLang(){
+  const t = T();
+  document.documentElement.lang = lang; document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+  document.title = t.title; $("#h1").textContent = t.title; $("#sub").textContent = t.sub;
+  TABS.forEach((k, i) => $("#tab-" + k).textContent = t.tabs[i]);
+  $("#lay-sel").textContent = t.laySel; $("#lay-all").textContent = t.layAll;
+  $("#lang-ar").setAttribute("aria-pressed", lang === "ar"); $("#lang-en").setAttribute("aria-pressed", lang === "en");
+  $("#eventcap").dir = lang === "ar" ? "rtl" : "ltr"; $("#legend-t").textContent = t.legend; $("#bcard").dir = lang === "ar" ? "rtl" : "ltr";
+  $("#legend").innerHTML = Object.entries(t.cat).map(([k, v]) => `<span><i class="dot" style="background:var(--c-${k})"></i>${v}</span>`).join("");
+  if (D){ $("#ticks").innerHTML = D.events.map(([y], i) => `<button class="tick" data-i="${i}" style="left:${toPos(y) * 100}%" title="${y}: ${esc(evText(i))}" aria-label="${y}: ${esc(evText(i))}"></button>`).join(""); }
+}
+function setLang(l){ lang = l; try { localStorage.setItem("atlas-lang", l); } catch(e) {} applyLang(); setYear(year, true); render(); drawDots(false); if (openKey) openBook(openKey); }
+$("#lang-ar").onclick = () => setLang("ar"); $("#lang-en").onclick = () => setLang("en");
+
+/* ---------- data helpers ---------- */
+const alive = (p, y) => p.b <= y && y <= (p.d ?? NOW);
+const cityAt = (p, y) => { let c = p.loc[0][1]; for (const [ly, lc] of p.loc) if (ly <= y) c = lc; return c; };
+const memsAt = (p, y) => p.mem.filter(m => m[0] <= y && y <= (m[1] ?? NOW));
+const gActive = (g, y) => g.y <= y && y <= (g.e ?? NOW);
+const regAt = (g, y) => { const r = g.reg.find(r => r[0] <= y && y < (r[1] ?? NOW + 1)); return r ? r[2] : []; };
+
+/* ---------- map ---------- */
+let svg, gRoot, gCountries, gLayerTop, gSpread, gFound, proj, path, zoom, W = 800, H = 500, countries, ANCHOR = new Map();
+function initMap(world){
+  svg = d3.select("#map");
+  gRoot = svg.append("g"); gCountries = gRoot.append("g"); gLayerTop = svg.append("g");
+  gSpread = gLayerTop.append("g"); gFound = gLayerTop.append("g");   // created first, so dots, arcs and labels draw above them
+  countries = topojson.feature(world, world.objects.countries).features;
+  // logo anchor per country: centre of its largest landmass (keeps France's on France, not between it and Guiana)
+  countries.forEach(f => {
+    const g = f.geometry; if (!g) return;
+    const polys = g.type === "MultiPolygon" ? g.coordinates.map(c => ({type: "Polygon", coordinates: c})) : [g];
+    const big = polys.reduce((a, b) => d3.geoArea(b) > d3.geoArea(a) ? b : a);
+    ANCHOR.set(f.id, d3.geoCentroid(big));
+  });
+  proj = d3.geoNaturalEarth1(); path = d3.geoPath(proj);
+  gCountries.selectAll("path").data(countries).join("path").attr("class", "country");
+  zoom = d3.zoom().scaleExtent([1, 14]).on("zoom", e => { transform = e.transform; gRoot.attr("transform", transform); drawDots(false); });
+  svg.call(zoom).on("dblclick.zoom", null);
+  $("#zin").onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 1.6);
+  $("#zout").onclick = () => svg.transition().duration(300).call(zoom.scaleBy, 1 / 1.6);
+  $("#zreset").onclick = () => svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity);
+  $("#lay-sel").onclick = () => { layerAll = false; $("#lay-sel").setAttribute("aria-pressed", "true"); $("#lay-all").setAttribute("aria-pressed", "false"); paintCountries(); };
+  $("#lay-all").onclick = () => { layerAll = true; $("#lay-all").setAttribute("aria-pressed", "true"); $("#lay-sel").setAttribute("aria-pressed", "false"); paintCountries(); };
+  // clicking empty map (land or sea) clears the selected figure
+  svg.on("click", e => { if ((e.target === svg.node() || (e.target.classList && e.target.classList.contains("country"))) && selP){ selP = null; paintCountries(); drawDots(false); render(); } });
+  new ResizeObserver(resize).observe($("#mapbox")); resize();
+}
+function resize(){
+  const r = $("#mapbox").getBoundingClientRect(); W = r.width; H = r.height;
+  svg.attr("viewBox", `0 0 ${W} ${H}`);
+  proj.fitExtent([[20, 70], [W - 20, H - 20]], {type: "FeatureCollection", features: countries.filter(f => ["504","792","682","586","887","818"].includes(f.id))});
+  gCountries.selectAll("path").attr("d", path); drawDots(false);
+}
+const pt = (lon, lat) => transform.apply(proj([lon, lat]));
+// the group whose spread is shown in "selected" mode: the chosen group, or the selected figure's group that year
+const focusGroup = () => { const g = selG ? GI[selG] : (selP && alive(PI[selP], year) ? GI[(memsAt(PI[selP], year).find(m => m[3] !== "x") || [])[2]] : null); return g && gActive(g, year) ? g : null; };
+// groups present in each country this year, biggest spread first
+function groupsByCountry(){
+  const m = new Map();
+  G.filter(g => gActive(g, year)).sort((a, b) => regAt(b, year).length - regAt(a, year).length || a.y - b.y)
+    .forEach(g => regAt(g, year).forEach(c => { if (!m.has(c)) m.set(c, []); m.get(c).push(g); }));
+  return m;
+}
+function stripePattern(gs){
+  const id = "st-" + gs.map(g => g.id).join("-");
+  if (!document.getElementById(id)){
+    const w = 5, p = d3.select("#defs").append("pattern").attr("id", id).attr("patternUnits", "userSpaceOnUse")
+      .attr("width", w * gs.length).attr("height", w * gs.length).attr("patternTransform", "rotate(45)");
+    gs.forEach((g, i) => p.append("rect").attr("x", i * w).attr("y", 0).attr("width", w).attr("height", w * gs.length).attr("fill", g.c));
+  }
+  return `url(#${id})`;
+}
+function paintCountries(){
+  const fill = new Map();
+  if (layerAll){
+    // every group keeps its own colour: one group = its colour, several = diagonal stripes of all of them
+    groupsByCountry().forEach((gs, c) => fill.set(c, gs.length === 1 ? d3.interpolateRgb(css("--land"), gs[0].c)(0.7) : stripePattern(gs.slice(0, 5))));
+  } else {
+    const g = focusGroup();
+    if (g) regAt(g, year).forEach(c => fill.set(c, d3.interpolateRgb(css("--land"), g.c)(0.62)));
+  }
+  gCountries.selectAll("path").style("fill", d => fill.get(d.id) || null).style("fill-opacity", d => layerAll && fill.has(d.id) ? .75 : null);
+  drawSpread();
+}
+// one logo badge (r = 10 before scaling): real emblem on white, or a monogram on the group's colour
+function badgeJoin(parent, cls, data){
+  const sel = parent.selectAll("g." + cls).data(data, d => d.key).join(enter => {
+    const e = enter.append("g").attr("class", cls + " gbadge");
+    e.each(function(d){ const n = d3.select(this), lg = LOGO[d.g.id];
+      n.append("circle").attr("r", 10).attr("fill", lg ? "#fff" : d.g.c).attr("stroke", d.g.c).attr("stroke-width", 2.2);
+      if (lg) n.append("image").attr("href", lg.src).attr("x", -7.2).attr("y", -7.2).attr("width", 14.4).attr("height", 14.4).attr("preserveAspectRatio", "xMidYMid meet");
+      else n.append("text").attr("class", "gmono").attr("text-anchor", "middle").attr("dy", "0.36em"); });
+    return e; });
+  sel.select("text.gmono").text(d => mono(d.g));
+  sel.attr("transform", d => `translate(${d.x},${d.y}) scale(${d.s})`).attr("opacity", d => d.op ?? 1)
+    .on("click", (e, d) => { e.stopPropagation(); selectGroup(d.g.id); })
+    .on("mouseenter", (e, d) => showTip(e, `${glogo(d.g, "")}<div><b>${esc(gn(d.g))}</b>${d.tip || ""}</div>`)).on("mouseleave", hideTip);
+  return sel;
+}
+// logos on the countries a group spread to
+function drawSpread(){
+  if (!gSpread) return;
+  const items = [], more = [];
+  if (layerAll){
+    groupsByCountry().forEach((gs, c) => { const a = ANCHOR.get(c); if (!a) return; const [x, y] = pt(a[0], a[1]), show = gs.slice(0, 3);
+      show.forEach((g, i) => items.push({key: g.id + "@" + c, g, x: x + (i - (show.length - 1) / 2) * 15, y, s: .7}));
+      if (gs.length > 3) more.push({key: c, x: x + (show.length / 2) * 15 + 4, y: y + 4, n: gs.length - 3}); });
+  } else {
+    const g = focusGroup();
+    if (g) regAt(g, year).forEach(c => { const a = ANCHOR.get(c); if (!a) return; const [x, y] = pt(a[0], a[1]); items.push({key: g.id + "@" + c, g, x, y, s: .9}); });
+  }
+  badgeJoin(gSpread, "gspread", items);
+  gSpread.selectAll("text.gmore").data(more, d => d.key).join("text").attr("class", "gmore").attr("x", d => d.x).attr("y", d => d.y).text(d => "+" + d.n);
+}
+function layout(){
+  const byCity = d3.group(P.filter(p => alive(p, year)), p => cityAt(p, year)), out = [];
+  const spread = transform.k >= 3 ? 22 : selP ? 14 : 7;
+  byCity.forEach((arr, c) => {
+    const C = D.cities[c]; if (!C) return;
+    const base = pt(C[1], C[2]); arr.sort((a, b) => a.b - b.b);
+    arr.forEach((p, k) => { const r = k === 0 ? 0 : spread * Math.sqrt(k) + 2, a = k * 2.4; out.push({p, x: base[0] + r * Math.cos(a), y: base[1] + r * Math.sin(a), city: c}); });
+  });
+  return out;
+}
+function drawDots(animate){
+  if (!D) return;
+  const L = layout(), pos = new Map(L.map(d => [d.p.id, d]));
+  const sel = selP ? PI[selP] : null, relSet = new Map();
+  if (sel){ sel.rel.forEach(r => relSet.set(r[0], r[1])); sel.inc.forEach(r => { if (!relSet.has(r[0])) relSet.set(r[0], r[1]); }); }
+  const dur = animate ? 650 : 0;
+  const arcs = [];
+  if (sel && pos.has(sel.id)){ const a = pos.get(sel.id); relSet.forEach((s, id) => { const b = pos.get(id); if (b && b !== a) arcs.push({a, b, s, id}); }); }
+  const colorOf = s => s > 0 ? css("--pos") : s < 0 ? css("--neg") : css("--neu");
+  gLayerTop.selectAll("path.rel").data(arcs, d => d.id).join("path").attr("class", "rel")
+    .attr("stroke", d => colorOf(d.s)).attr("stroke-dasharray", d => d.s === 0 ? "4 4" : null)
+    .attr("d", d => { const mx = (d.a.x + d.b.x) / 2, my = (d.a.y + d.b.y) / 2, dx = d.b.x - d.a.x, dy = d.b.y - d.a.y; return `M${d.a.x},${d.a.y} Q${mx - dy * .22},${my + dx * .22} ${d.b.x},${d.b.y}`; });
+  // group diamonds: several groups founded in one city sit side by side instead of on top of each other
+  const gm = [];
+  d3.group(G.filter(g => gActive(g, year)), g => g.pl).forEach((gs, c) => { const C = D.cities[c], q2 = pt(C[1], C[2]); gs.forEach((g, k) => gm.push({key: g.id, g, x: q2[0] - 14 - k * 17, y: q2[1] - 16,
+    s: selG === g.id ? 1.15 : .8, op: selG && selG !== g.id ? .4 : 1, tip: `${T().founded} ${g.y} · ${esc(cityName(g.pl))}`})); });
+  badgeJoin(gFound, "gmark", gm);
+  drawSpread();
+  const tipFor = d => { const m = memsAt(d.p, year).filter(m => m[3] !== "x").map(m => gn(GI[m[2]]))[0]; return `${avatar(d.p, "sm")}<div><b>${esc(nm(d.p))}</b>${esc(cityName(d.city))}${m ? " · " + esc(m) : ""}</div>`; };
+  // which visible people get a portrait on the map
+  const bigK = transform.k >= 3;
+  const withPic = d => IMG[d.p.id] && (bigK || d.p.id === selP || relSet.has(d.p.id));
+  const dots = gLayerTop.selectAll("circle.pdot").data(L, d => d.p.id);
+  dots.exit().transition().duration(animate ? 300 : 0).attr("r", 0).remove();
+  dots.enter().append("circle").attr("class", "pdot").attr("r", 0).attr("cx", d => d.x).attr("cy", d => d.y)
+    .on("click", (e, d) => { e.stopPropagation(); selectPerson(d.p.id); })
+    .on("mouseenter", (e, d) => showTip(e, tipFor(d))).on("mouseleave", hideTip)
+   .merge(dots).attr("fill", d => `var(--c-${d.p.cat})`)
+    .classed("sel", d => d.p.id === selP).classed("dim", d => sel && d.p.id !== selP && !relSet.has(d.p.id))
+    .transition().duration(dur).attr("cx", d => d.x).attr("cy", d => d.y).attr("r", d => d.p.id === selP ? 8 : 5.5);
+  // portraits (clipped circles) on top of dots
+  const PR = d => d.p.id === selP ? 17 : 12;
+  const defs = d3.select("#defs");
+  defs.selectAll("clipPath").data(L.filter(withPic), d => d.p.id).join(enter => { const c = enter.append("clipPath").attr("id", d => "cp-" + d.p.id); c.append("circle"); return c; })
+    .select("circle").attr("r", PR).transition().duration(dur).attr("cx", d => d.x).attr("cy", d => d.y);
+  gLayerTop.selectAll("image.pava").data(L.filter(withPic), d => d.p.id).join(enter => enter.append("image").attr("class", "pava").attr("preserveAspectRatio", "xMidYMin slice")
+      .on("click", (e, d) => { e.stopPropagation(); selectPerson(d.p.id); }).on("mouseenter", (e, d) => showTip(e, tipFor(d))).on("mouseleave", hideTip))
+    .attr("href", d => IMG[d.p.id]).attr("clip-path", d => `url(#cp-${d.p.id})`).attr("opacity", d => sel && d.p.id !== selP && !relSet.has(d.p.id) ? .3 : 1)
+    .attr("width", d => PR(d) * 2).attr("height", d => PR(d) * 2)
+    .transition().duration(dur).attr("x", d => d.x - PR(d)).attr("y", d => d.y - PR(d));
+  gLayerTop.selectAll("circle.pava-ring").data(L.filter(withPic), d => d.p.id).join("circle").attr("class", "pava-ring")
+    .attr("stroke", d => d.p.id === selP ? css("--ink") : `var(--c-${d.p.cat})`).attr("r", PR)
+    .transition().duration(dur).attr("cx", d => d.x).attr("cy", d => d.y);
+  gLayerTop.selectAll("image.pava, circle.pava-ring").filter(d => d.p.id === selP).raise();
+  // labels: selected first, then related, then others; drop any that would overlap one already placed
+  const cand = L.filter(d => bigK || d.p.id === selP || relSet.has(d.p.id))
+    .sort((a, b) => (b.p.id === selP) - (a.p.id === selP) || relSet.has(b.p.id) - relSet.has(a.p.id));
+  // portraits count as obstacles, so a name never sits across someone else's face; the selected name always shows
+  const placed = L.filter(withPic).map(d => ({x0: d.x - PR(d), x1: d.x + PR(d), y0: d.y - PR(d), y1: d.y + PR(d), id: d.p.id})), lab = [];
+  const free = r => placed.every(o => r.x1 < o.x0 || r.x0 > o.x1 || r.y1 < o.y0 || r.y0 > o.y1);
+  cand.forEach(d => {
+    const w = nm(d.p).length * 6.3 + 6, off = withPic(d) ? PR(d) : 4;
+    const opts = [d.y - off - 4, d.y + off + 13].map(ly => ({ly, r: {x0: d.x - w / 2, x1: d.x + w / 2, y0: ly - 11, y1: ly + 2}}));   // above, then below
+    const pick = opts.find(o => free(o.r)) || (d.p.id === selP ? opts[0] : null);
+    if (pick) { placed.push(pick.r); d.ly = pick.ly; lab.push(d); }
+  });
+  gLayerTop.selectAll("text.plabel").data(lab, d => d.p.id).join("text").attr("class", "plabel").attr("text-anchor", "middle")
+    .text(d => nm(d.p)).transition().duration(dur).attr("x", d => d.x).attr("y", d => d.ly);
+  gLayerTop.selectAll("text.plabel").raise();
+}
+function showTip(e, html){
+  const t = $("#tip"), r = $("#mapbox").getBoundingClientRect(); t.innerHTML = html; t.hidden = false;
+  const x = e.clientX - r.left, y = e.clientY - r.top, w = t.offsetWidth, h = t.offsetHeight;
+  t.style.left = Math.max(6, x + 12 + w > r.width - 6 ? x - w - 12 : x + 12) + "px";   // flip left near the right edge
+  t.style.top = Math.max(6, y + 14 + h > r.height - 6 ? y - h - 10 : y + 14) + "px";   // flip up near the bottom edge
+}
+function hideTip(){ $("#tip").hidden = true; }
+
+/* ---------- timeline ---------- */
+function initTimeline(){
+  const s = $("#slider");
+  s.addEventListener("input", () => setYear(toYear(s.value / 1000)));
+  $("#ticks").addEventListener("click", e => { const b = e.target.closest(".tick"); if (b) setYear(D.events[b.dataset.i][0]); });
+  $("#scale").innerHTML = [1263, 1798, 1900, 1928, 1952, 1967, 1979, 1991, 2001, 2011, 2026].map(y => `<span${[1900, 1928, 1952, 1991, 2026].includes(y) ? "" : ' class="s-narrow-hide"'} style="left:${toPos(y) * 100}%">${y}</span>`).join("");
+  $("#play").onclick = togglePlay;
+  document.addEventListener("keydown", e => { if (e.target.matches("input")) return; if (e.key === "ArrowRight") setYear(year + 1); if (e.key === "ArrowLeft") setYear(year - 1); });
+}
+function togglePlay(){
+  if (playing){ clearInterval(playing); playing = null; $("#playicon").setAttribute("d", "M4 2l10 6-10 6z"); return; }
+  if (year >= NOW) setYear(1798);
+  $("#playicon").setAttribute("d", "M3 2h4v12H3zM9 2h4v12H9z");
+  playing = setInterval(() => { if (year >= NOW){ togglePlay(); return; } setYear(year + (year < 1900 ? 4 : 1)); }, 260);
+}
+function setYear(y, silent){
+  year = Math.max(Y0 + 3, Math.min(NOW, y));
+  $("#slider").value = Math.round(toPos(year) * 1000);
+  $("#yearbig").textContent = year;
+  let ei = -1; D.events.forEach((e, i) => { if (e[0] <= year) ei = i; });
+  $("#eventcap").innerHTML = ei >= 0 && year - D.events[ei][0] <= 12 ? `<bdi dir="ltr">${D.events[ei][0]}</bdi> · ${esc(evText(ei))}` : "";
+  document.querySelectorAll(".tick").forEach(t => t.classList.toggle("on", D.events[t.dataset.i][0] === year));
+  paintCountries(); drawDots(!silent);
+  if (!silent) render();
+  writeHash();
+}
+
+/* ---------- panel ---------- */
+function initTabs(){ TABS.forEach(k => $("#tab-" + k).onclick = () => { tab = k; render(); $("#pbody").scrollTop = 0; writeHash(); }); }
+let sameView = false;
+const saveScope = () => { try { localStorage.setItem("atlas-scope", JSON.stringify({scope, from: rFrom, to: rTo})); } catch(e) {} };
+function render(){
+  TABS.forEach(t => $("#tab-" + t).setAttribute("aria-selected", t === tab));
+  const b = $("#pbody");
+  // when only the year changed (slider / play), keep what the reader had open and where they had scrolled
+  const key = [tab, selP, selG, lang, tab === "people" && !selP ? [q, scope, rFrom, rTo].join("~") : ""].join("|");
+  sameView = key === lastKey; lastKey = key;
+  const open = sameView ? [...b.querySelectorAll(".long")].map(l => !l.hidden) : null, st = b.scrollTop;
+  b.innerHTML = tab === "about" ? aboutHTML() : tab === "books" ? booksHTML() : tab === "groups" ? (selG ? groupHTML(GI[selG]) : groupsListHTML()) : (selP ? personHTML(PI[selP]) : peopleListHTML());
+  wire(b);
+  if (open){
+    b.querySelectorAll(".long").forEach((l, i) => { if (!open[i]) return; l.hidden = false; const m = l.previousElementSibling; if (m && m.matches("[data-t]")){ m.dataset.lbl = m.textContent; m.textContent = T().hide; } });
+    b.scrollTop = st;
+  } else requestAnimationFrame(() => requestAnimationFrame(() => b.querySelectorAll(".gauge").forEach(g => g.querySelector(".face").style.left = ((+g.dataset.s + 2) / 4 * 100) + "%")));
+}
+const gauge = (s, cap) => `<div class="gauge" data-s="${s}"><div class="bar"></div><div class="mid"></div><span class="face" title="${T().verdict[s]}"${sameView ? ` style="left:${(s + 2) / 4 * 100}%"` : ""}>${FACE[s]}</span></div>${cap ? `<div class="gauge-cap"><span class="n">😠 ${T().neg}</span><span>${T().neu}</span><span class="p">${T().pos} 😄</span></div>` : ""}`;
+const verdict = s => `<span class="verdict" style="color:${s > 0 ? "var(--pos)" : s < 0 ? "var(--neg)" : "var(--muted)"}">${T().verdict[s]}</span>`;
+function peopleListHTML(){
+  const t = T();
+  // scope: alive in the map's year, any year, or alive at some point in a chosen period
+  const inScope = p => scope === "all" ? true : scope === "range" ? p.b <= rTo && (p.d ?? NOW) >= rFrom : alive(p, year);
+  const qq = norm(q);   // أ/إ/آ = ا, ة = ه, ى = ي, diacritics and "al-" hyphens ignored
+  const hit = p => !qq || norm(p.n).includes(qq) || norm(EN.people[p.id]?.n).includes(qq);
+  const list = P.filter(p => inScope(p) && hit(p)).sort((a, b) => a.b - b.b);
+  const elsewhere = qq && scope !== "all" ? P.filter(p => !inScope(p) && hit(p)).length : 0;
+  const head = qq ? t.results(list.length) : scope === "all" ? t.allList(list.length) : scope === "range" ? t.inRange(rFrom, rTo, list.length) : t.aliveIn(year, list.length, P.length);
+  return `<p class="hint">${t.hint}</p>
+  <input class="search" id="q" type="search" placeholder="${t.search}" value="${esc(q)}">
+  <div class="scope" role="group">${["year","all","range"].map(s => `<button data-scope="${s}" aria-pressed="${scope === s}">${s === "year" ? t.scope.year(year) : t.scope[s]}</button>`).join("")}</div>
+  ${scope === "range" ? `<div class="range"><label>${t.from} <input type="number" id="rfrom" min="${Y0}" max="${NOW}" value="${rFrom}"></label><label>${t.to} <input type="number" id="rto" min="${Y0}" max="${NOW}" value="${rTo}"></label></div>` : ""}
+  <div class="eyebrow">${head}</div>
+  <div class="plist">${list.map(p => `<button class="prow" data-p="${p.id}">${avatar(p, "sm")}<span class="nm"><span>${esc(nm(p))}</span><small>${t.cat[p.cat]}</small></span><small>${yrs(p)}</small></button>`).join("") || `<p class="hint">${qq ? t.noMatch : t.nobody}</p>`}</div>
+  ${elsewhere ? `<button class="alsohint" data-scope="all">${t.alsoOther(elsewhere)}</button>` : ""}`;
+}
+function personHTML(p){
+  const t = T(), here = alive(p, year), city = cityAt(p, year);
+  let status;
+  if (!here) status = `<div class="st"><i style="background:var(--neu)"></i>${year < p.b ? t.notBorn(year, p.b) : t.died(p.d)}</div>`;
+  else {
+    const cur = memsAt(p, year);
+    status = cur.map(m => `<button class="st" data-g="${m[2]}">${glogo(GI[m[2]], "sm")}<span><b>${t.role[m[3]]}</b> · ${esc(gn(GI[m[2]]))}</span></button>`).join("");
+    status += p.mem.filter(m => m[0] > year && !cur.some(c => c[2] === m[2])).map(m => `<div class="st"><i style="background:${GI[m[2]].c};opacity:.4"></i>${t.notYet(esc(gn(GI[m[2]])), m[0])}</div>`).join("");
+    status += p.mem.filter(m => (m[1] ?? NOW) < year && !cur.some(c => c[2] === m[2])).map(m => `<div class="st"><i style="background:${GI[m[2]].c};opacity:.4"></i>${t.ended(esc(gn(GI[m[2]])), m[1])}</div>`).join("");
+    if (!p.mem.length) status = `<div class="st"><i style="background:var(--neu)"></i>${t.noGroup}</div>`;
+  }
+  const relRow = (o, s, txt) => `<div class="item"><div class="item-h" style="cursor:default">${avatar(o, "xs")}<button class="relname" data-p="${o.id}">${esc(nm(o))}</button><small>${alive(o, year) ? verdict(s) : `<span class="off">${t.notVisible}</span>`}</small></div>
+    ${gauge(s)}<p class="sub2">${esc(txt[0])}</p><button class="more" data-t>${t.why}</button><p class="long" hidden>${esc(txt[1])}</p></div>`;
+  const out = p.rel.filter(r => PI[r[0]]).map(r => relRow(PI[r[0]], r[1], relTxt(p, r[0], r))).join("");
+  const inc = p.inc.map(r => relRow(PI[r[0]], r[1], relTxt(PI[r[0]], p.id, r))).join("");
+  return `<button class="back" data-back>${t.allPeople}</button>
+  <div class="phead"><span class="ava-wrap">${avatar(p, "lg")}${flagImg(p, "flag")}</span><div><div class="meta"><i class="dot" style="background:var(--c-${p.cat})"></i> ${t.cat[p.cat]}${p.c ? ` · <span class="ctry">${flagImg(p, "")}${esc(ctryName(p.c))}</span>` : ""}</div><h2>${esc(nm(p))}</h2>
+  <div class="meta">${yrs(p)}${here ? ` · ${t.inYear(year)} <b>${esc(cityName(city))}</b>` : ""}</div></div></div>
+  <div class="status">${status}</div>
+  <p class="lead">${esc(pf(p, "s"))}</p>
+  <button class="more" data-t>${t.readMore}</button><p class="long" hidden>${esc(pf(p, "l"))}</p>
+  <div class="eyebrow">${t.sheikhView}</div>
+  ${gauge(p.sv, true)}
+  <p class="sub2" style="margin:6px 0 0">${verdict(p.sv)} · ${esc(pf(p, "st"))}</p>
+  <div class="eyebrow">${t.creedT}</div>
+  <span class="creed"><i style="background:${CREEDC[p.cr.k] || CREEDC.none}"></i>${t.creed[p.cr.k] || t.creed.none}</span>
+  ${p.cr.k !== "none" ? `<p class="sub2" style="margin:6px 0 0">${esc(crT(p))}</p>` : ""}
+  ${p.stn.length ? `<div class="stances">${p.stn.map(k => `<div class="stance${NEG_ST.has(k) ? " neg" : ""}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${STP[k]}"/></svg>${t.st[k]}</div>`).join("")}</div>` : ""}
+  ${p.bk.length ? `<div class="eyebrow">${t.books} · ${p.bk.length}</div>${shelf(p)}` : ""}
+  ${out ? `<div class="eyebrow">${t.hisViews}</div>${out}` : ""}
+  ${inc ? `<div class="eyebrow">${t.othersViews}</div>${inc}` : ""}
+  <div class="eyebrow">${t.journey}</div>
+  <div class="journey">${p.loc.map(([y, c], i) => { const cur = here && y <= year && year < (p.loc[i + 1] ? p.loc[i + 1][0] : NOW + 1); return `<button class="jrow${cur ? " cur" : ""}" data-y="${y}"><span>${y}</span><span>${esc(cityName(c))}</span></button>`; }).join("")}</div>
+  <div class="eyebrow">${t.mentioned}</div>
+  <div class="parts">${p.p.map(n => `<a href="https://www.youtube.com/watch?v=${PARTS[n - 1]}" target="_blank" rel="noopener">${n}. ${t.parts[n - 1]}</a>`).join("")}</div>
+  <p class="note">${t.noteP}</p>${credit(p)}`;
+}
+function groupsListHTML(){
+  const t = T();
+  return `<p class="hint">${t.groupsHint(year)}</p>
+  <div class="plist" style="margin-top:10px">${[...G].sort((a, b) => a.y - b.y).map(g => `<button class="grow${gActive(g, year) ? "" : " inactive"}" data-g="${g.id}">${glogo(g, "")}<span>${esc(gn(g))}</span><small>${g.y}${g.e ? "–" + g.e : ""}</small></button>`).join("")}</div>`;
+}
+function groupHTML(g){
+  const t = T(), a = gActive(g, year), reg = regAt(g, year);
+  const members = P.filter(p => p.mem.some(m => m[2] === g.id)).map(p => ({p, m: p.mem.filter(m => m[2] === g.id)})).sort((x, y) => x.m[0][0] - y.m[0][0]);
+  return `<button class="back" data-back>${t.allGroups}</button>
+  <div class="ghead">${glogo(g, "lg")}<div><div class="meta"><span class="sw" style="background:${g.c}"></span> ${t.groupKind}</div>
+  <h2>${esc(gn(g))}</h2>
+  <div class="meta">${t.founded} ${g.y}${g.e ? " · " + t.endedG + " " + g.e : ""} · ${esc(cityName(g.pl))}</div></div></div>
+  <div class="status"><div class="st"><i style="background:${g.c};opacity:${a ? 1 : .35}"></i>${a ? t.activeIn(year, reg.length) : year < g.y ? t.notFounded(year) : t.endedBefore(year)}</div></div>
+  <div class="eyebrow">${t.founding}</div>
+  <p class="sub2" style="margin:0">${t.founder} <b style="color:var(--ink)">${esc(gf(g, "by"))}</b></p>
+  <p class="lead">${esc(gf(g, "s"))}</p>
+  <button class="more" data-t>${t.readMore}</button><p class="long" hidden>${esc(gf(g, "l"))}</p>
+  ${members.length ? `<div class="eyebrow">${t.linked}</div><div class="plist">${members.map(({p, m}) => `<button class="prow" data-p="${p.id}">${avatar(p, "sm")}<span class="nm"><span>${esc(nm(p))}</span><small>${m.map(x => t.role[x[3]]).join(lang === "ar" ? "، " : ", ")}</small></span><small>${m[0][0]}${m[0][1] ? "–" + m[0][1] : ""}</small></button>`).join("")}</div>` : ""}
+  <p class="note">${t.noteG}</p>${LOGO[g.id] ? `<p class="credit">${t.logo} <a href="${esc(LOGO[g.id].url)}" target="_blank" rel="noopener">${esc(LOGO[g.id].artist || LOGO[g.id].file)}</a> · ${esc(LOGO[g.id].license)}</p>` : ""}`;
+}
+function aboutHTML(){
+  const t = T();
+  return `<h2>${t.aboutT}</h2>
+  <p class="lead">${t.about(P.length, G.length)}</p>
+  <div class="eyebrow">${t.howT}</div><p class="sub2">${t.how}</p>
+  ${gauge(-2, true)}
+  <div class="eyebrow">${t.iconsT}</div>
+  <div class="stances">${Object.keys(STP).map(k => `<div class="stance${NEG_ST.has(k) ? " neg" : ""}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${STP[k]}"/></svg>${t.st[k]}</div>`).join("")}</div>
+  <div class="eyebrow">${t.partsT}</div>
+  <div class="parts">${PARTS.map((id, i) => `<a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">${i + 1}. ${t.parts[i]}</a>`).join("")}</div>
+  <p class="note">${t.noteA}</p>
+  ${Object.keys(CRED).length ? `<details><summary class="eyebrow" style="cursor:pointer">${t.creditsT} · ${Object.keys(CRED).length}</summary><div class="credits">${P.filter(p => CRED[p.id]).map(p => { const c = CRED[p.id]; return `<div><b>${esc(nm(p))}</b> — <a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.artist || c.file)}</a> · ${esc(c.license)}</div>`; }).join("")}${G.filter(g => LOGO[g.id]).map(g => { const c = LOGO[g.id]; return `<div><b>${esc(gn(g))}</b> (${t.logo.replace(":", "")}) — <a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.artist || c.file)}</a> · ${esc(c.license)}</div>`; }).join("")}</div></details>` : ""}`;
+}
+function wire(b){
+  const qi = b.querySelector("#q");
+  if (qi) qi.addEventListener("input", () => { q = qi.value; const pos = qi.selectionStart; render(); const n = $("#q"); n.focus(); n.setSelectionRange(pos, pos); });
+  // period inputs apply when the viewer leaves the box or presses Enter, so typing a year doesn't re-render mid-number
+  b.querySelectorAll("#rfrom, #rto").forEach(inp => inp.addEventListener("change", () => {
+    let a = parseInt($("#rfrom").value, 10), z = parseInt($("#rto").value, 10);
+    a = isNaN(a) ? rFrom : Math.max(Y0, Math.min(NOW, a)); z = isNaN(z) ? rTo : Math.max(Y0, Math.min(NOW, z));
+    if (a > z) [a, z] = [z, a];
+    rFrom = a; rTo = z; saveScope(); render();
+  }));
+  b.onclick = e => {
+    const t = e.target;
+    const bk = t.closest("[data-bk]"); if (bk){ openBook(bk.dataset.bk); return; }
+    const sc = t.closest("[data-scope]"); if (sc){ scope = sc.dataset.scope; if (scope === "range" && rFrom === 1950 && rTo === 1980) { rFrom = Math.max(Y0, year - 20); rTo = Math.min(NOW, year + 20); } saveScope(); render(); return; }
+    const pp = t.closest("[data-p]"); if (pp){ selectPerson(pp.dataset.p, true); return; }
+    const gg = t.closest("[data-g]"); if (gg){ selectGroup(gg.dataset.g); return; }
+    if (t.closest("[data-back]")){ if (tab === "groups") selG = null; else selP = null; paintCountries(); drawDots(false); render(); writeHash(); return; }
+    const jy = t.closest("[data-y]"); if (jy){ setYear(+jy.dataset.y); return; }
+    const m = t.closest("[data-t]"); if (m){ const l = m.nextElementSibling; if (!m.dataset.lbl) m.dataset.lbl = m.textContent; l.hidden = !l.hidden; m.textContent = l.hidden ? m.dataset.lbl : T().hide; return; }
+    const m2 = t.closest("[data-t2]"); if (m2){ const l = m2.parentElement.querySelector(".long"); l.hidden = !l.hidden; }
+  };
+}
+function selectPerson(id, jump){
+  const p = PI[id]; selP = id; selG = null; tab = "people";
+  if (jump && !alive(p, year)) setYear(year < p.b ? Math.min(p.b + 20, p.d ?? NOW) : (p.d ?? NOW), true);
+  paintCountries(); drawDots(true); render();
+  $("#pbody").scrollTop = 0; writeHash();
+}
+function selectGroup(id){
+  selG = id; tab = "groups";
+  if (!gActive(GI[id], year)) setYear(GI[id].y, true);
+  paintCountries(); drawDots(false); render(); $("#pbody").scrollTop = 0; writeHash();
+}
+})();
+</script>
+</body></html>

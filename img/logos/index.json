@@ -1,0 +1,37 @@
+{
+"mb": {
+"src": "img/logos/mb.svg",
+"file": "Muslim Brotherhood Emblem.svg",
+"url": "https://commons.wikimedia.org/wiki/File:Muslim_Brotherhood_Emblem.svg",
+"artist": "Xi Knight",
+"license": "Public domain"
+},
+"jamaat": {
+"src": "img/logos/jamaat.svg",
+"file": "Jamaat-e-Islami Pakistan Flag.svg",
+"url": "https://commons.wikimedia.org/wiki/File:Jamaat-e-Islami_Pakistan_Flag.svg",
+"artist": "SVG by Ali Zifan",
+"license": "Public domain"
+},
+"pjd": {
+"src": "img/logos/pjd.jpg",
+"file": "Logo PJD Maroc.jpg",
+"url": "https://commons.wikimedia.org/wiki/File:Logo_PJD_Maroc.jpg",
+"artist": "Abmouhcin",
+"license": "CC BY-SA 4.0"
+},
+"taliban": {
+"src": "img/logos/taliban.svg",
+"file": "Flag of the Taliban.svg",
+"url": "https://commons.wikimedia.org/wiki/File:Flag_of_the_Taliban.svg",
+"artist": "Original: Taliban Vector: Lexicon",
+"license": "Public domain"
+},
+"syriamb": {
+"src": "img/logos/mb.svg",
+"file": "Muslim Brotherhood Emblem.svg",
+"url": "https://commons.wikimedia.org/wiki/File:Muslim_Brotherhood_Emblem.svg",
+"artist": "Xi Knight",
+"license": "Public domain"
+}
+}
