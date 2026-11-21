@@ -11,19 +11,19 @@
   --pos:#2f8f5b; --neg:#b4472c; --neu:#8a8f8c; --chip:#eef2ef; --shadow:0 1px 2px rgba(20,30,28,.06),0 6px 24px rgba(20,30,28,.07);
   --display:"Reem Kufi","IBM Plex Sans Arabic",system-ui,sans-serif;
   --body:"IBM Plex Sans Arabic",system-ui,"Segoe UI",Tahoma,sans-serif;
-  --c-leader:#1f7a5c; --c-scholar:#2d5d9f; --c-preacher:#c7811c; --c-thinker:#7a5aa6; --c-fighter:#a8432f; --c-ruler:#5b6770; --c-adversary:#8c2f39; --c-other:#8a8f8c;
+  --c-leader:#1f7a5c; --c-scholar:#2d5d9f; --c-preacher:#c7811c; --c-thinker:#7a5aa6; --c-fighter:#a8432f; --c-ruler:#6f7a1f; --c-adversary:#8c2f39; --c-other:#8a8f8c;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0e1416; --panel:#151d20; --ink:#e4ebe8; --muted:#97a6a1; --line:#2a3538;
   --sea:#101b1f; --land:#253031; --border:#3b4846; --accent:#4fbf95; --accent-ink:#0b1412;
   --pos:#5cc98c; --neg:#e07a5a; --neu:#8d9794; --chip:#1d272a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
-  --c-leader:#4fbf95; --c-scholar:#6c9be0; --c-preacher:#e3a643; --c-thinker:#a78bd4; --c-fighter:#e07a5a; --c-ruler:#9aa8b1; --c-adversary:#e06a78; --c-other:#9aa19e;
+  --c-leader:#4fbf95; --c-scholar:#6c9be0; --c-preacher:#e3a643; --c-thinker:#a78bd4; --c-fighter:#e07a5a; --c-ruler:#b9c24a; --c-adversary:#e06a78; --c-other:#9aa19e;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0e1416; --panel:#151d20; --ink:#e4ebe8; --muted:#97a6a1; --line:#2a3538;
   --sea:#101b1f; --land:#253031; --border:#3b4846; --accent:#4fbf95; --accent-ink:#0b1412;
   --pos:#5cc98c; --neg:#e07a5a; --neu:#8d9794; --chip:#1d272a; --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 28px rgba(0,0,0,.35);
-  --c-leader:#4fbf95; --c-scholar:#6c9be0; --c-preacher:#e3a643; --c-thinker:#a78bd4; --c-fighter:#e07a5a; --c-ruler:#9aa8b1; --c-adversary:#e06a78; --c-other:#9aa19e;
+  --c-leader:#4fbf95; --c-scholar:#6c9be0; --c-preacher:#e3a643; --c-thinker:#a78bd4; --c-fighter:#e07a5a; --c-ruler:#b9c24a; --c-adversary:#e06a78; --c-other:#9aa19e;
   color-scheme:dark}
 html,body{height:100%}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.7}
@@ -80,7 +80,7 @@ span.ava{background:var(--cat)}
 .track{position:relative;padding-top:18px}
 .ticks{position:absolute;top:0;left:0;right:0;height:16px}
 .tick{position:absolute;top:4px;width:2px;height:10px;background:var(--muted);opacity:.55;transform:translateX(-1px);border:0;padding:0;cursor:pointer}
-.tick:hover,.tick.on{opacity:1;background:var(--accent);height:14px;top:2px}
+.tick:hover,.tick.on{opacity:1;background-color:var(--accent);height:14px;top:2px}
 input[type=range]{width:100%;accent-color:var(--accent);margin:0;height:22px}
 .scale{position:relative;height:16px;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
 .scale span{position:absolute;transform:translateX(-50%);white-space:nowrap}
@@ -216,10 +216,25 @@ dialog.bcard::backdrop{background:rgba(10,16,15,.45)}
 .prison.empty{opacity:.35}
 .prison text{font-size:9px;font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--sea);stroke-width:3px}
 /* episode player: the sheikh's videos through YouTube's own embedded player */
-.timeline{grid-template-columns:auto auto 1fr}
-.listen{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--accent);cursor:pointer;display:grid;place-items:center}
-.listen[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-.listen svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* header actions: the labelled "listen" button sits beside the language switch, where it is seen first */
+.hdr-act{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.listen{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:999px;padding:8px 16px;background:var(--accent);color:var(--accent-ink);cursor:pointer;font-weight:700;font-size:14px;box-shadow:var(--shadow)}
+.listen:hover{filter:brightness(1.08)}
+.listen[aria-pressed="true"]{background:var(--panel);color:var(--accent);box-shadow:inset 0 0 0 2px var(--accent)}
+.listen svg{width:20px;height:20px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* timeline event marks: 2 px to see, 12 px to hit */
+.tick{width:12px;padding:0 5px;background-clip:content-box;transform:translateX(-6px)}
+/* card sections that fold */
+details.sec{margin-top:4px}
+details.sec>summary{cursor:pointer;list-style:none}
+details.sec>summary::-webkit-details-marker{display:none}
+details.sec>summary::before{content:"▸";display:inline-block;transition:transform .15s}
+[dir="rtl"] details.sec>summary::before{content:"◂"}
+details.sec[open]>summary::before{transform:rotate(90deg)}
+[dir="rtl"] details.sec[open]>summary::before{transform:rotate(-90deg)}
+.rface{font-size:15px;vertical-align:-1px}
+.howl{margin:4px 0 0;padding-inline-start:20px;color:var(--muted);font-size:13.5px;display:flex;flex-direction:column;gap:6px}
+.howl li::marker{color:var(--accent)}
 .mapcol:has(.player:not([hidden])){grid-template-rows:1fr auto auto}
 .player{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:8px 10px;display:flex;gap:12px;align-items:center;direction:ltr;min-width:0}
 .yt{flex:none;width:200px;height:113px;border-radius:8px;overflow:hidden;background:#000}
@@ -273,9 +288,12 @@ dialog.bcard::backdrop{background:rgba(10,16,15,.45)}
       <h1 id="h1">أطلس الجماعات الإسلامية</h1>
       <p class="sub" id="sub"></p>
     </div>
-    <div class="lang" role="group" aria-label="Language">
-      <button id="lang-ar" aria-pressed="true">العربية</button>
-      <button id="lang-en" aria-pressed="false">English</button>
+    <div class="hdr-act">
+      <button class="listen" id="listen" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15v-3a9 9 0 0 1 18 0v3M3 15h3v6H4a1 1 0 0 1-1-1zM21 15h-3v6h2a1 1 0 0 0 1-1z"/></svg><span id="listen-t"></span></button>
+      <div class="lang" role="group" aria-label="Language">
+        <button id="lang-ar" aria-pressed="true">العربية</button>
+        <button id="lang-en" aria-pressed="false">English</button>
+      </div>
     </div>
   </header>
   <div class="main">
@@ -302,13 +320,12 @@ dialog.bcard::backdrop{background:rgba(10,16,15,.45)}
           <button id="zout" aria-label="−">−</button>
           <button id="zreset" aria-label="reset">⟲</button>
         </div>
-        <details class="legend" id="legendbox" open><summary id="legend-t"></summary><div class="lg" id="legend"></div></details>
+        <details class="legend" id="legendbox"><summary id="legend-t"></summary><div class="lg" id="legend"></div></details>
         <div class="tip" id="tip" hidden></div>
         <div class="maptoast" id="maptoast" aria-hidden="true"></div>
       </div>
       <div class="timeline">
         <button class="play" id="play"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path id="playicon" d="M4 2l10 6-10 6z"/></svg></button>
-        <button class="listen" id="listen" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15v-3a9 9 0 0 1 18 0v3M3 15h3v6H4a1 1 0 0 1-1-1zM21 15h-3v6h2a1 1 0 0 0 1-1z"/></svg></button>
         <div class="track">
           <div class="ticks" id="ticks"></div>
           <input type="range" id="slider" min="0" max="1000" step="1">
@@ -363,27 +380,27 @@ const UI = {
   st:{jihad:"الجهاد والقوة طريقًا",dawah:"الدعوة وبيان التصورات",tarbiya:"التربية",politics:"المشاركة السياسية والبرلمان",nopolitics:"يرفض الدخول في السياسة",scholarship:"العلم الشرعي",preach:"الوعظ والخطابة",resist:"مقاومة الاستعمار",peaceful:"المسالمة والتدرج",izza:"العزة الإيمانية",loyalist:"الاصطفاف مع السلطة ضد الحركات",secular:"خصم لأصول الإسلام أو للحركات"},
   verdict:{"-2":"سلبي جدًا","-1":"سلبي","0":"محايد","1":"إيجابي","2":"إيجابي جدًا"},
   neg:"سلبي",neu:"محايد",pos:"إيجابي",
-  hint:"حرّك شريط الزمن أسفل الخريطة لترى من كان حيًّا وأين كان. اضغط على أي نقطة أو اسم لتفتح بطاقته.",
+  hint:"حرّك شريط الزمن لترى من كان حيًّا وأين، واضغط على أي اسم أو نقطة لتفتح بطاقته.",
   search:"ابحث عن اسم…",results:n=>`نتائج البحث (${n})`,noMatch:"لا توجد نتائج لهذا الاسم.",aliveIn:(y,n,t)=>`أحياء في سنة ${y} (${n} من ${t})`,nobody:"لا أحد في هذا التاريخ.",
   allPeople:"→ كل الشخصيات",allGroups:"→ كل الجماعات",notBorn:(y,b)=>`لم يولد بعد في ${y}، وُلد سنة ${b}`,died:d=>`توفي سنة ${d}`,
   notYet:(g,y)=>`لم ينضم بعد إلى ${g} (من ${y})`,ended:(g,y)=>`انتهت صلته بـ${g} سنة ${y}`,noGroup:"غير منتمٍ إلى جماعة بحسب السلسلة",inYear:y=>`في ${y}:`,
   readMore:"اقرأ أكثر",hide:"أخفِ",why:"لماذا؟",sheikhView:"رأي الشيخ فيه",creedT:"العقيدة والمنهج (بحسب الشيخ)",books:"الكتب والأعمال",
-  hisViews:"موقفه من الآخرين",othersViews:"مواقف الآخرين منه",journey:"رحلته عبر الأماكن",mentioned:"ذُكر في المقاطع",notVisible:"غير ظاهر في هذه السنة",
+  hisViews:"موقفه من الآخرين",othersViews:"مواقف الآخرين منه",journey:"رحلته عبر الأماكن",mentioned:"استمع إلى كلام الشيخ عنه",notVisible:"غير ظاهر في هذه السنة",
   noteP:"الآراء والتقييمات من كلام الشيخ في السلسلة. التواريخ والأماكن والبلد من المعرفة التاريخية العامة وقد تكون تقريبية (~). الصور من ويكيبيديا وويكيميديا كومنز بترخيص حر، ومن لا صورة حرة له يظهر بالحرف الأول من اسمه.",
   groupsHint:y=>`الجماعات مرتبة بسنة التأسيس. الباهتة لم تُؤسس بعد أو انتهت في سنة ${y}. اضغط على جماعة لترى انتشارها على الخريطة وأعضاءها.`,
   groupKind:"جماعة / تيار",founded:"تأسست",endedG:"انتهت",activeIn:(y,n)=>`نشطة في ${y}، ظاهرة في ${n} دولة على الخريطة`,notFounded:y=>`لم تُؤسس بعد في ${y}`,endedBefore:y=>`انتهت قبل ${y}`,
   founding:"التأسيس",founder:"المؤسس:",linked:"شخصيات مرتبطة بها",noteG:"مناطق الانتشار على الخريطة تقريبية ومستخلصة من كلام الشيخ والمعرفة العامة، وليست حدودًا دقيقة. الشعارات من ويكيميديا كومنز بترخيص حر، والجماعات التي لا شعار حرًّا لها تظهر برمز مختصر بلونها.",
   aboutT:"عن هذا الأطلس",about:(p,g)=>`أطلس تفاعلي مبني على سلسلة «الجماعات الإسلامية» للشيخ أحمد بن خالد الهاجري (قناة كيان المعرفة). يضم ${p} شخصية و${g} جماعة وتيارًا ذكرها الشيخ، من ابن تيمية إلى الصحوة الجديدة.`,
-  howT:"كيف تستخدمه",how:"حرّك شريط الزمن، أو اضغط ▶ لتشغيله، أو اضغط على علامات الأحداث فوقه. تنتقل النقاط بين المدن مع تنقّل أصحابها. اضغط على شخصية لترى جماعتها في تلك السنة، ورأي الشيخ فيها، ومنهجها، وكتبها، وخطوطًا ملوّنة إلى من له موقف منهم. مقياس المواقف: 😠 السلبي يسارًا، 😐 المحايد في الوسط، 😄 الإيجابي يمينًا. على الخريطة: الأخضر إيجابي، الأحمر سلبي، المتقطع محايد. يظهر شعار كل جماعة نشطة في مكان تأسيسها، وعند اختيار جماعة يظهر شعارها على كل دولة انتشرت فيها، وفي وضع «كل الجماعات» تُلوَّن كل دولة بخطوط بألوان الجماعات الموجودة فيها. كبّر الخريطة لتظهر صور الجميع.",
+  howT:"كيف تستخدمه",how:["حرّك شريط الزمن أو اضغط ▶ بجانبه ليتحرك وحده، فتنتقل النقاط بين المدن مع أصحابها.","اضغط على شخصية لترى جماعتها ورأي الشيخ فيها ومنهجها وكتبها، وخطوطًا إلى من له موقف منهم: الأخضر إيجابي، والأحمر سلبي، والمتقطع محايد.","مقياس الرأي: 😠 السلبي يسارًا، و😐 المحايد في الوسط، و😄 الإيجابي يمينًا.","شعار كل جماعة في مكان تأسيسها. اختر جماعة لترى الدول التي انتشرت فيها، أو «كل الجماعات» لتُلوَّن كل دولة بجماعاتها.","كبّر الخريطة لتظهر الصور. على الهاتف حرّكها بإصبعين."],
   iconsT:"رموز المنهج",partsT:"المقاطع",noteA:"كل الآراء والتقييمات والتصنيفات منسوبة إلى الشيخ كما وردت في السلسلة. حين لا يصنّف الشيخ شخصًا عقديًا يُكتب «لم يصنّفه الشيخ». التواريخ والأماكن والانتشار الجغرافي من المعرفة التاريخية العامة وقد تكون تقريبية. استُخرج النص من الترجمة الآلية في يوتيوب.",
   loadErr:"تعذّر تحميل البيانات. أعد تحميل الصفحة.",
   toMap:"الخريطة",toCard:n=>`بطاقة ${n}`,twoFingers:"استخدم إصبعين لتحريك الخريطة",
-  listen:"استمع إلى حلقات الشيخ",follow:"تتبّع الشيخ على الخريطة",followTip:"حين يذكر الشيخ شخصية أو جماعة أو سنة تُفتح بطاقتها وتتحرك الخريطة والزمن معه",
+  listen:"استمع إلى حلقات الشيخ",playTL:"شغّل شريط الزمن",follow:"تتبّع الشيخ على الخريطة",followTip:"حين يذكر الشيخ شخصية أو جماعة أو سنة تُفتح بطاقتها وتتحرك الخريطة والزمن معه",
   prevEp:"الحلقة السابقة",nextEp:"الحلقة التالية",back10:"رجوع 10 ثوانٍ",fwd10:"تقديم 10 ثوانٍ",playPause:"تشغيل / إيقاف",closePl:"إغلاق المشغّل",seek:"موضع التشغيل",
   epN:n=>`الحلقة ${n}`,capNote:"النص من الترجمة الآلية في يوتيوب",playFrom:"استمع من أول موضع ذُكر فيه",onYT:"افتح على يوتيوب",
   jailed:"في السجن",inPrison:(r,on,c)=>`في السجن ${on ? `منذ ${r}` : `(${r})`} · ${c}`,prisonT:"فترات السجن",stillHeld:"حتى الآن",prison:"سجن",
   prisonNow:(y,n)=>`مسجونون هنا في ${y}: ${n}`,prisonEmpty:y=>`لا أحد من شخصيات الأطلس مسجون هنا في ${y}`,deadMark:d=>`توفي سنة ${d}`,
-  audioT:"الاستماع مع الخريطة",audioHow:"اضغط زر السماعة 🎧 بجانب ▶ لتسمع حلقات الشيخ (من قناته على يوتيوب)، وتنقّل بين الحلقات أو تقدّم وارجع. فعّل «تتبّع الشيخ على الخريطة» فتُفتح بطاقة كل شخصية أو جماعة حين يذكرها، وينتقل الزمن إلى السنة التي يتكلم عنها، أو إلى زمن الشخصية إن لم يذكر سنة. التتبع آلي من الترجمة النصية فقد يخطئ أحيانًا. علامة السجن على الخريطة تبين أماكن السجون، ومن كان مسجونًا في السنة المختارة ينتقل إليها، ومن توفي تظهر على صورته في البطاقة شارة سوداء."},
+  audioT:"الاستماع مع الخريطة",audioHow:["اضغط «استمع إلى حلقات الشيخ» أعلى الصفحة لتسمع الحلقات من قناته على يوتيوب، وتنقّل بينها أو تقدّم وارجع.","فعّل «تتبّع الشيخ على الخريطة» فتُفتح بطاقة كل شخصية أو جماعة حين يذكرها، وينتقل الزمن إلى السنة التي يتكلم عنها، أو إلى زمن الشخصية إن لم يذكر سنة. التتبع آلي من الترجمة النصية فقد يخطئ أحيانًا.","في بطاقة كل شخصية، ▶ بجانب الحلقة يبدأ من أول موضع ذكرها الشيخ فيه.","علامة السجن تظهر حيث كان أحدهم مسجونًا في السنة المختارة، ومن توفي تظهر على صورته في البطاقة شارة سوداء."]},
  en:{title:"Atlas of Islamic Movements",sub:"Every figure and group Sheikh Ahmad bin Khalid al-Hajri mentions in his 10-part series on Islamic groups, on a map and through time",
   tabs:["Figures","Groups","Books","About"],laySel:"Selected group",layAll:"All groups",legend:"Colour key",
   ctry:{eg:"Egypt",sa:"Saudi Arabia",sy:"Syria",fr:"France",tn:"Tunisia",af:"Afghanistan",ly:"Libya",dz:"Algeria",ma:"Morocco",lb:"Lebanon",tr:"Turkey",ps:"Palestine",et:"Ethiopia",al:"Albania",pk:"Pakistan",in:"India",ir:"Iran",iq:"Iraq",kw:"Kuwait",us:"United States",sd:"Sudan"},
@@ -402,27 +419,27 @@ const UI = {
   st:{jihad:"Jihad / force as the path",dawah:"Dawah and ideas",tarbiya:"Spiritual formation (tarbiya)",politics:"Political / parliamentary participation",nopolitics:"Rejects entering politics",scholarship:"Islamic scholarship",preach:"Preaching",resist:"Anti-colonial resistance",peaceful:"Conciliation and gradualism",izza:"Pride in faith",loyalist:"Sides with rulers against movements",secular:"Opposes Islam's foundations or the movements"},
   verdict:{"-2":"Very negative","-1":"Negative","0":"Neutral","1":"Positive","2":"Very positive"},
   neg:"Negative",neu:"Neutral",pos:"Positive",
-  hint:"Move the timeline under the map to see who was alive and where. Click any dot or name to open their card.",
+  hint:"Move the timeline to see who was alive and where; tap any name or dot to open their card.",
   search:"Search a name…",results:n=>`Search results (${n})`,noMatch:"No figure matches that name.",aliveIn:(y,n,t)=>`Alive in ${y} (${n} of ${t})`,nobody:"Nobody at this date.",
   allPeople:"← All figures",allGroups:"← All groups",notBorn:(y,b)=>`Not yet born in ${y}; born ${b}`,died:d=>`Died ${d}`,
   notYet:(g,y)=>`Has not yet joined ${g} (from ${y})`,ended:(g,y)=>`Tie to ${g} ended in ${y}`,noGroup:"Not in any group, per the series",inYear:y=>`In ${y}:`,
   readMore:"Read more",hide:"Hide",why:"Why?",sheikhView:"The sheikh's view of him",creedT:"Creed and method (per the sheikh)",books:"Books and works",
-  hisViews:"His stance on others",othersViews:"Others' stance on him",journey:"His journey",mentioned:"Mentioned in episodes",notVisible:"not on the map this year",
+  hisViews:"His stance on others",othersViews:"Others' stance on him",journey:"His journey",mentioned:"Hear what the sheikh says about him",notVisible:"not on the map this year",
   noteP:"Opinions and judgments are the sheikh's, from the series. Dates, places and country of origin come from general historical knowledge and may be approximate (~). Portraits are freely licensed images from Wikipedia and Wikimedia Commons; figures without one show their initial.",
   groupsHint:y=>`Groups ordered by founding year. Faded ones did not yet exist or had ended by ${y}. Click a group to see its spread and members.`,
   groupKind:"Group / current",founded:"Founded",endedG:"ended",activeIn:(y,n)=>`Active in ${y}, shown in ${n} countries`,notFounded:y=>`Not yet founded in ${y}`,endedBefore:y=>`Ended before ${y}`,
   founding:"Founding",founder:"Founder:",linked:"Linked figures",noteG:"Map areas are approximate, drawn from the sheikh's words and general knowledge, not precise borders. Logos are freely licensed files from Wikimedia Commons; groups without a free logo show a short monogram in their colour.",
   aboutT:"About this atlas",about:(p,g)=>`An interactive atlas based on Sheikh Ahmad bin Khalid al-Hajri's series on Islamic groups (Keyan al-Ma'rifa channel). It covers ${p} figures and ${g} groups and currents he mentions, from Ibn Taymiyya to the new Sahwa.`,
-  howT:"How to use it",how:"Drag the timeline, press ▶ to play it, or click the event marks above it. Dots move between cities as people did. Click a figure to see their group that year, the sheikh's view of them, their method, books, and coloured lines to people they held views on. The opinion scale: 😠 negative on the left, 😐 neutral in the middle, 😄 positive on the right. On the map: green is positive, red negative, dashed neutral. Each active group shows its logo where it was founded; pick a group to see its logo on every country it spread to. In “All groups” mode each country is striped in the colours of the groups present there. Zoom in to see everyone's portrait.",
+  howT:"How to use it",how:["Drag the timeline, or press the ▶ beside it to play it; dots move between cities as people did.","Click a figure to see their group, the sheikh's view of them, their method and books, and lines to people they held views on: green positive, red negative, dashed neutral.","The opinion scale: 😠 negative on the left, 😐 neutral in the middle, 😄 positive on the right.","Each group's logo sits where it was founded. Pick a group to see the countries it spread to, or “All groups” to colour every country by its groups.","Zoom in to see portraits. On a phone, move the map with two fingers."],
   iconsT:"Method icons",partsT:"Episodes",noteA:"All opinions, judgments and classifications are attributed to the sheikh as stated in the series. Where he does not classify someone's creed, the card says so. Dates, places and geographic spread come from general historical knowledge and may be approximate. The text was taken from YouTube's automatic captions; English is a translation.",
   loadErr:"Could not load the data. Reload the page.",
   toMap:"Map",toCard:n=>`${n}'s card`,twoFingers:"Use two fingers to move the map",
-  listen:"Listen to the sheikh's episodes",follow:"Follow the sheikh on the map",followTip:"When the sheikh names a figure, group or year, its card opens and the map and timeline move with him",
+  listen:"Listen to the sheikh's episodes",playTL:"Play the timeline",follow:"Follow the sheikh on the map",followTip:"When the sheikh names a figure, group or year, its card opens and the map and timeline move with him",
   prevEp:"Previous episode",nextEp:"Next episode",back10:"Back 10 seconds",fwd10:"Forward 10 seconds",playPause:"Play / pause",closePl:"Close the player",seek:"Playback position",
   epN:n=>`Episode ${n}`,capNote:"Arabic text from YouTube's automatic captions",playFrom:"Listen from where he is first mentioned",onYT:"Open on YouTube",
   jailed:"In prison",inPrison:(r,on,c)=>`In prison ${on ? `since ${r}` : `(${r})`} · ${c}`,prisonT:"Time in prison",stillHeld:"still held",prison:"Prison",
   prisonNow:(y,n)=>`Held here in ${y}: ${n}`,prisonEmpty:y=>`No figure in the atlas is held here in ${y}`,deadMark:d=>`Died ${d}`,
-  audioT:"Listening along with the map",audioHow:"Press the headphones button 🎧 next to ▶ to hear the sheikh's episodes (from his YouTube channel), move between episodes, or skip back and forward. Turn on “Follow the sheikh on the map” and each figure or group opens as he names it, and the timeline moves to the year he is talking about, or to the figure's own time when he gives no year. Following works from the automatic captions, so it can sometimes be wrong. The prison mark on the map shows where prisons were; anyone in prison in the chosen year moves there, and anyone who has died shows a black sash on their portrait in the card."}
+  audioT:"Listening along with the map",audioHow:["Press “Listen to the sheikh's episodes” at the top to hear the episodes from his YouTube channel, move between them, or skip back and forward.","Turn on “Follow the sheikh on the map” and each figure or group opens as he names it, and the timeline moves to the year he is talking about, or to the figure's own time when he gives no year. Following works from the automatic captions, so it can sometimes be wrong.","On a figure's card, the ▶ beside an episode starts where the sheikh first mentions them.","A prison mark shows where someone was held in the chosen year, and anyone who has died shows a black sash on their portrait in the card."]}
 };
 const CREEDC = {salafi:"var(--pos)","salafi-notes":"#c99a2e",rational:"#c7811c",sufi:"#7a5aa6",shia:"#8c2f39",jami:"#6e6e6e",secular:"var(--neg)",other:"var(--neu)",none:"var(--neu)"};
 const STP = {
@@ -735,14 +752,14 @@ function drawSpread(){
   badgeJoin(gSpread, "gspread", items);
   gSpread.selectAll("text.gmore").data(more, d => d.key).join("text").attr("class", "gmore").attr("x", d => d.x).attr("y", d => d.y).text(d => "+" + d.n);
 }
-// a prison mark at every city where a figure was held, from the first stay there on; solid while someone is inside
+// a prison mark at a city only in the years a figure is held there (empty marks everywhere crowded the map)
 let PRISONS = null;
 function drawPrisons(){
   if (!PRISONS){ PRISONS = new Map(); P.forEach(p => (p.pr || []).forEach(r => PRISONS.set(r[2], Math.min(PRISONS.get(r[2]) ?? NOW, r[0])))); }
   const items = [];
   PRISONS.forEach((from, c) => { if (year < from) return; const C = D.cities[c], [x, y] = pt(C[1], C[2]);
     const inside = P.filter(p => alive(p, year) && prisonAt(p, year)?.[2] === c);
-    items.push({c, x: x + 15, y: y + 13, inside}); });
+    if (inside.length) items.push({c, x: x + 15, y: y + 13, inside}); });
   const sel = gPrison.selectAll("g.prison").data(items, d => d.c).join(enter => { const g = enter.append("g").attr("class", "prison");
     g.append("rect").attr("x", -7).attr("y", -7).attr("width", 14).attr("height", 14).attr("rx", 2.5);
     [-3.5, 0, 3.5].forEach(dx => g.append("line").attr("x1", dx).attr("x2", dx).attr("y1", -4.5).attr("y2", 4.5));
@@ -871,8 +888,10 @@ function render(){
   const key = [tab, selP, selG, lang, tab === "people" && !selP ? [q, scope, rFrom, rTo].join("~") : ""].join("|");
   sameView = key === lastKey; lastKey = key;
   const open = sameView ? [...b.querySelectorAll(".long")].map(l => !l.hidden) : null, st = b.scrollTop;
+  const secs = sameView ? [...b.querySelectorAll("details.sec")].map(d => d.open) : null;
   b.innerHTML = tab === "about" ? aboutHTML() : tab === "books" ? booksHTML() : tab === "groups" ? (selG ? groupHTML(GI[selG]) : groupsListHTML()) : (selP ? personHTML(PI[selP]) : peopleListHTML());
   wire(b); updJump();
+  if (secs) b.querySelectorAll("details.sec").forEach((d, i) => { if (secs[i]) d.open = true; });
   if (open){
     b.querySelectorAll(".long").forEach((l, i) => { if (!open[i]) return; l.hidden = false; const m = l.previousElementSibling; if (m && m.matches("[data-t]")){ m.dataset.lbl = m.textContent; m.textContent = T().hide; } });
     b.scrollTop = st;
@@ -913,8 +932,10 @@ function personHTML(p){
     if (!p.mem.length) status = `<div class="st"><i style="background:var(--neu)"></i>${t.noGroup}</div>`;
     if (jail) status = `<div class="st jail">${LOCK}<b>${t.inPrison(`<bdi dir="ltr">${prYears(jail)}</bdi>`, jail[1] == null, esc(cityName(jail[2])))}</b></div>` + status;
   }
-  const relRow = (o, s, txt) => `<div class="item"><div class="item-h" style="cursor:default">${avatar(o, "xs")}<button class="relname" data-p="${o.id}">${esc(nm(o))}</button><small>${alive(o, year) ? verdict(s) : `<span class="off">${t.notVisible}</span>`}</small></div>
-    ${gauge(s)}<p class="sub2">${esc(txt[0])}</p><button class="more" data-t>${t.why}</button><p class="long" hidden>${esc(txt[1])}</p></div>`;
+  // one compact row per relation: face and verdict in colour instead of a full gauge each time
+  const relRow = (o, s, txt) => `<div class="item"><div class="item-h" style="cursor:default">${avatar(o, "xs")}<button class="relname" data-p="${o.id}">${esc(nm(o))}</button><small><span class="rface" title="${T().verdict[s]}">${FACE[s]}</span> ${verdict(s)}</small></div>
+    <p class="sub2">${esc(txt[0])}</p><button class="more" data-t>${t.why}</button><p class="long" hidden>${esc(txt[1])}</p></div>`;
+  const nOut = p.rel.filter(r => PI[r[0]]).length, nInc = p.inc.length;
   const out = p.rel.filter(r => PI[r[0]]).map(r => relRow(PI[r[0]], r[1], relTxt(p, r[0], r))).join("");
   const inc = p.inc.map(r => relRow(PI[r[0]], r[1], relTxt(PI[r[0]], p.id, r))).join("");
   return `<button class="back" data-back>${t.allPeople}</button>
@@ -930,14 +951,14 @@ function personHTML(p){
   <span class="creed"><i style="background:${CREEDC[p.cr.k] || CREEDC.none}"></i>${t.creed[p.cr.k] || t.creed.none}</span>
   ${p.cr.k !== "none" ? `<p class="sub2" style="margin:6px 0 0">${esc(crT(p))}</p>` : ""}
   ${p.stn.length ? `<div class="stances">${p.stn.map(k => `<div class="stance${NEG_ST.has(k) ? " neg" : ""}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${STP[k]}"/></svg>${t.st[k]}</div>`).join("")}</div>` : ""}
+  <div class="eyebrow">${t.mentioned}</div>
+  <div class="parts">${p.p.map(n => partLink(n, p.id)).join("")}</div>
   ${p.bk.length ? `<div class="eyebrow">${t.books} · ${p.bk.length}</div>${shelf(p)}` : ""}
-  ${out ? `<div class="eyebrow">${t.hisViews}</div>${out}` : ""}
-  ${inc ? `<div class="eyebrow">${t.othersViews}</div>${inc}` : ""}
+  ${out ? `<details class="sec"><summary class="eyebrow">${t.hisViews} · ${nOut}</summary>${out}</details>` : ""}
+  ${inc ? `<details class="sec"><summary class="eyebrow">${t.othersViews} · ${nInc}</summary>${inc}</details>` : ""}
   <div class="eyebrow">${t.journey}</div>
   <div class="journey">${p.loc.map(([y, c], i) => { const cur = here && !jail && y <= year && year < (p.loc[i + 1] ? p.loc[i + 1][0] : NOW + 1); return `<button class="jrow${cur ? " cur" : ""}" data-y="${y}"><span>${y}</span><span>${esc(cityName(c))}</span></button>`; }).join("")}</div>
   ${p.pr ? `<div class="eyebrow">${t.prisonT}</div><div class="journey">${p.pr.map(r => `<button class="jrow jailrow${jail === r ? " cur" : ""}" data-y="${r[0]}"><span><bdi dir="ltr">${prYears(r)}</bdi></span><span>${LOCK.replace("<svg", '<svg class="lock"')}${esc(cityName(r[2]))}${r[1] == null ? ` · ${t.stillHeld}` : ""}</span></button>`).join("")}</div>` : ""}
-  <div class="eyebrow">${t.mentioned}</div>
-  <div class="parts">${p.p.map(n => partLink(n, p.id)).join("")}</div>
   <p class="note">${t.noteP}</p>${credit(p)}`;
 }
 function groupsListHTML(){
@@ -964,11 +985,11 @@ function aboutHTML(){
   const t = T();
   return `<h2>${t.aboutT}</h2>
   <p class="lead">${t.about(P.length, G.length)}</p>
-  <div class="eyebrow">${t.howT}</div><p class="sub2">${t.how}</p>
+  <div class="eyebrow">${t.audioT}</div><ul class="howl">${t.audioHow.map(x => `<li>${x}</li>`).join("")}</ul>
+  <div class="eyebrow">${t.howT}</div><ul class="howl">${t.how.map(x => `<li>${x}</li>`).join("")}</ul>
   ${gauge(-2, true)}
   <div class="eyebrow">${t.iconsT}</div>
   <div class="stances">${Object.keys(STP).map(k => `<div class="stance${NEG_ST.has(k) ? " neg" : ""}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${STP[k]}"/></svg>${t.st[k]}</div>`).join("")}</div>
-  <div class="eyebrow">${t.audioT}</div><p class="sub2">${t.audioHow}</p>
   <div class="eyebrow">${t.partsT}</div>
   <div class="parts">${PARTS.map((_, i) => partLink(i + 1)).join("")}</div>
   <p class="note">${t.noteA}</p>
@@ -1105,7 +1126,11 @@ function bringIntoView(p){
   const [x, y] = pt(C[1], C[2]); if (x > 40 && x < W - 40 && y > 80 && y < H - 40) return;
   svg.transition().duration(700).call(zoom.translateBy, (W / 2 - x) / transform.k, (H / 2 - y) / transform.k);
 }
-$("#listen").onclick = () => { if (!$("#player").hidden){ showPlayer(false); return; } if (YTP && AU.data){ showPlayer(true); return; } playEpisode(AU.ep, AU.t, true); };
+$("#listen").onclick = () => {
+  if (!$("#player").hidden){ showPlayer(false); return; }
+  if (YTP && AU.data) showPlayer(true); else playEpisode(AU.ep, AU.t, true);
+  if (isPhone()) setTimeout(() => $("#player").scrollIntoView({block: "nearest", behavior: smooth()}), 60);   // the player opens under the map
+};
 $("#pl-close").onclick = () => showPlayer(false);
 $("#pl-ep").onchange = e => playEpisode(+e.target.value, 0, true);
 $("#pl-prev").onclick = () => { if (AU.ep > 1) playEpisode(AU.ep - 1, 0, true); };
@@ -1119,7 +1144,7 @@ $("#pl-follow").checked = AU.follow;
 $("#pl-follow").onchange = e => { AU.follow = e.target.checked; saveAU(); if (AU.follow && AU.data){ AU.cue = lastIdx(AU.data.cues, AU.t); replay(AU.cue); } };
 function playerLang(){
   const t = T();
-  $("#listen").title = t.listen; $("#listen").setAttribute("aria-label", t.listen);
+  $("#listen-t").textContent = t.listen; $("#play").title = t.playTL; $("#play").setAttribute("aria-label", t.playTL);
   $("#pl-follow-t").textContent = t.follow; $("#pl-follow").parentElement.title = t.followTip;
   [["#pl-prev", t.prevEp], ["#pl-next", t.nextEp], ["#pl-back", t.back10], ["#pl-fwd", t.fwd10], ["#pl-pp", t.playPause], ["#pl-close", t.closePl]].forEach(([s, l]) => { $(s).title = l; $(s).setAttribute("aria-label", l); });
   $("#pl-seek").setAttribute("aria-label", t.seek); $("#pl-cap").title = t.capNote;
