@@ -202,6 +202,45 @@ dialog.bcard::backdrop{background:rgba(10,16,15,.45)}
 .legend summary::before{content:"▸ ";display:inline-block}
 .legend[open] summary::before{content:"▾ "}
 .legend[open] summary{margin-bottom:4px}
+/* portrait overlays in the card: bars while in prison, a black mourning sash once dead (photos may already be black and white, so no greyscale) */
+.ava-ov{position:absolute;left:0;top:0;width:88px;height:88px;border-radius:50%;overflow:hidden;pointer-events:none}
+.ava-ov.jail{background:repeating-linear-gradient(90deg,transparent 0 10px,rgba(24,26,28,.82) 10px 14px)}
+.ava-ov .sash{position:absolute;width:150%;height:16px;left:-52%;top:18%;transform:rotate(-45deg);background:#111;box-shadow:0 0 0 1.5px rgba(255,255,255,.9)}
+.st.jail svg,.jrow .lock{width:14px;height:14px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.jrow.jailrow{grid-template-columns:96px 1fr}
+.jrow.jailrow span:last-child{display:flex;align-items:center;gap:6px}
+/* prison marker on the map */
+.prison{cursor:pointer}
+.prison rect{fill:#3b4146;stroke:var(--panel);stroke-width:1.5}
+.prison line{stroke:#fff;stroke-width:1.6;stroke-linecap:round}
+.prison.empty{opacity:.35}
+.prison text{font-size:9px;font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--sea);stroke-width:3px}
+/* episode player: the sheikh's videos through YouTube's own embedded player */
+.timeline{grid-template-columns:auto auto 1fr}
+.listen{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--accent);cursor:pointer;display:grid;place-items:center}
+.listen[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.listen svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mapcol:has(.player:not([hidden])){grid-template-rows:1fr auto auto}
+.player{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:8px 10px;display:flex;gap:12px;align-items:center;direction:ltr;min-width:0}
+.yt{flex:none;width:200px;height:113px;border-radius:8px;overflow:hidden;background:#000}
+.yt iframe{display:block;width:100%;height:100%;border:0}
+.pl-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.pl-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}
+.pl-row select{flex:1;min-width:0;max-width:100%;padding:4px 6px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font:inherit;font-size:13px}
+.pl-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--line);background:var(--panel);cursor:pointer;display:grid;place-items:center;padding:0;font-size:11px;font-weight:700;flex:none}
+.pl-btn svg{width:16px;height:16px;fill:currentColor}
+.pl-pp{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.pl-time{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pl-seek{flex:1;min-width:80px}
+.follow{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;white-space:nowrap;border:1px solid var(--line);border-radius:999px;padding:3px 10px 3px 6px}
+.follow:has(input:checked){color:var(--accent-ink);background:var(--accent);border-color:var(--accent)}
+.follow input{margin:0;accent-color:var(--accent)}
+.pl-cap{font-size:13.5px;color:var(--ink);line-height:1.5;min-height:1.5em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:start}
+.pl-cap small{color:var(--muted)}
+.parts button{font:inherit;font-size:12.5px;color:var(--accent);background:none;border:1px solid var(--line);border-radius:6px;padding:2px 8px;cursor:pointer;text-align:start}
+.parts button:hover{background:var(--chip)}
+.parts .yt-link{border:0;padding:2px 2px;font-size:12px;color:var(--muted)}
+.part{display:inline-flex;align-items:center;gap:2px}
 @media (max-width:860px){
   .app{height:auto}
   .main{grid-template-columns:1fr}
@@ -210,6 +249,9 @@ dialog.bcard::backdrop{background:rgba(10,16,15,.45)}
   .pbody{overflow:visible}
   .legend{font-size:11px}
   .eventcap{top:56px}
+  .player{flex-wrap:wrap}
+  .pl-row select{flex-basis:100%}
+  .yt{width:100%;height:auto;aspect-ratio:16/9;max-width:360px;margin-inline:auto}
 }
 @media (max-width:520px){ .scale .s-narrow-hide{display:none} .tab{font-size:14px;padding:10px 2px} }
 .tab{white-space:nowrap}
@@ -256,10 +298,27 @@ dialog.bcard::backdrop{background:rgba(10,16,15,.45)}
       </div>
       <div class="timeline">
         <button class="play" id="play"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path id="playicon" d="M4 2l10 6-10 6z"/></svg></button>
+        <button class="listen" id="listen" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15v-3a9 9 0 0 1 18 0v3M3 15h3v6H4a1 1 0 0 1-1-1zM21 15h-3v6h2a1 1 0 0 0 1-1z"/></svg></button>
         <div class="track">
           <div class="ticks" id="ticks"></div>
           <input type="range" id="slider" min="0" max="1000" step="1">
           <div class="scale" id="scale"></div>
+        </div>
+      </div>
+      <div class="player" id="player" hidden>
+        <div class="yt"><div id="yt"></div></div>
+        <div class="pl-main">
+          <div class="pl-row"><select id="pl-ep"></select><label class="follow"><input type="checkbox" id="pl-follow"><span id="pl-follow-t"></span></label><button class="pl-btn" id="pl-close">×</button></div>
+          <div class="pl-row">
+            <button class="pl-btn" id="pl-prev"><svg viewBox="0 0 16 16"><path d="M3 2h2v12H3zM14 2v12L6 8z"/></svg></button>
+            <button class="pl-btn" id="pl-back">−10</button>
+            <button class="pl-btn pl-pp" id="pl-pp"><svg viewBox="0 0 16 16"><path id="pl-ppi" d="M4 2l10 6-10 6z"/></svg></button>
+            <button class="pl-btn" id="pl-fwd">+10</button>
+            <button class="pl-btn" id="pl-next"><svg viewBox="0 0 16 16"><path d="M11 2h2v12h-2zM2 2v12l8-6z"/></svg></button>
+            <input type="range" class="pl-seek" id="pl-seek" min="0" max="1" step="1" value="0">
+            <span class="pl-time" id="pl-time">0:00</span>
+          </div>
+          <div class="pl-cap" id="pl-cap" dir="rtl" lang="ar"></div>
         </div>
       </div>
     </section>
@@ -306,7 +365,13 @@ const UI = {
   aboutT:"عن هذا الأطلس",about:(p,g)=>`أطلس تفاعلي مبني على سلسلة «الجماعات الإسلامية» للشيخ أحمد بن خالد الهاجري (قناة كيان المعرفة). يضم ${p} شخصية و${g} جماعة وتيارًا ذكرها الشيخ، من ابن تيمية إلى الصحوة الجديدة.`,
   howT:"كيف تستخدمه",how:"حرّك شريط الزمن، أو اضغط ▶ لتشغيله، أو اضغط على علامات الأحداث فوقه. تنتقل النقاط بين المدن مع تنقّل أصحابها. اضغط على شخصية لترى جماعتها في تلك السنة، ورأي الشيخ فيها، ومنهجها، وكتبها، وخطوطًا ملوّنة إلى من له موقف منهم. مقياس المواقف: 😠 السلبي يسارًا، 😐 المحايد في الوسط، 😄 الإيجابي يمينًا. على الخريطة: الأخضر إيجابي، الأحمر سلبي، المتقطع محايد. يظهر شعار كل جماعة نشطة في مكان تأسيسها، وعند اختيار جماعة يظهر شعارها على كل دولة انتشرت فيها، وفي وضع «كل الجماعات» تُلوَّن كل دولة بخطوط بألوان الجماعات الموجودة فيها. كبّر الخريطة لتظهر صور الجميع.",
   iconsT:"رموز المنهج",partsT:"المقاطع",noteA:"كل الآراء والتقييمات والتصنيفات منسوبة إلى الشيخ كما وردت في السلسلة. حين لا يصنّف الشيخ شخصًا عقديًا يُكتب «لم يصنّفه الشيخ». التواريخ والأماكن والانتشار الجغرافي من المعرفة التاريخية العامة وقد تكون تقريبية. استُخرج النص من الترجمة الآلية في يوتيوب.",
-  loadErr:"تعذّر تحميل البيانات. أعد تحميل الصفحة."},
+  loadErr:"تعذّر تحميل البيانات. أعد تحميل الصفحة.",
+  listen:"استمع إلى حلقات الشيخ",follow:"تتبّع الشيخ على الخريطة",followTip:"حين يذكر الشيخ شخصية أو جماعة أو سنة تُفتح بطاقتها وتتحرك الخريطة والزمن معه",
+  prevEp:"الحلقة السابقة",nextEp:"الحلقة التالية",back10:"رجوع 10 ثوانٍ",fwd10:"تقديم 10 ثوانٍ",playPause:"تشغيل / إيقاف",closePl:"إغلاق المشغّل",seek:"موضع التشغيل",
+  epN:n=>`الحلقة ${n}`,capNote:"النص من الترجمة الآلية في يوتيوب",playFrom:"استمع من أول موضع ذُكر فيه",onYT:"افتح على يوتيوب",
+  jailed:"في السجن",inPrison:(r,on,c)=>`في السجن ${on ? `منذ ${r}` : `(${r})`} · ${c}`,prisonT:"فترات السجن",stillHeld:"حتى الآن",prison:"سجن",
+  prisonNow:(y,n)=>`مسجونون هنا في ${y}: ${n}`,prisonEmpty:y=>`لا أحد من شخصيات الأطلس مسجون هنا في ${y}`,deadMark:d=>`توفي سنة ${d}`,
+  audioT:"الاستماع مع الخريطة",audioHow:"اضغط زر السماعة 🎧 بجانب ▶ لتسمع حلقات الشيخ (من قناته على يوتيوب)، وتنقّل بين الحلقات أو تقدّم وارجع. فعّل «تتبّع الشيخ على الخريطة» فتُفتح بطاقة كل شخصية أو جماعة حين يذكرها، وينتقل الزمن إلى السنة التي يتكلم عنها، أو إلى زمن الشخصية إن لم يذكر سنة. التتبع آلي من الترجمة النصية فقد يخطئ أحيانًا. علامة السجن على الخريطة تبين أماكن السجون، ومن كان مسجونًا في السنة المختارة ينتقل إليها، ومن توفي تظهر على صورته في البطاقة شارة سوداء."},
  en:{title:"Atlas of Islamic Movements",sub:"Every figure and group Sheikh Ahmad bin Khalid al-Hajri mentions in his 10-part series on Islamic groups, on a map and through time",
   tabs:["Figures","Groups","Books","About"],laySel:"Selected group",layAll:"All groups",legend:"Colour key",
   ctry:{eg:"Egypt",sa:"Saudi Arabia",sy:"Syria",fr:"France",tn:"Tunisia",af:"Afghanistan",ly:"Libya",dz:"Algeria",ma:"Morocco",lb:"Lebanon",tr:"Turkey",ps:"Palestine",et:"Ethiopia",al:"Albania",pk:"Pakistan",in:"India",ir:"Iran",iq:"Iraq",kw:"Kuwait",us:"United States",sd:"Sudan"},
@@ -338,7 +403,13 @@ const UI = {
   aboutT:"About this atlas",about:(p,g)=>`An interactive atlas based on Sheikh Ahmad bin Khalid al-Hajri's series on Islamic groups (Keyan al-Ma'rifa channel). It covers ${p} figures and ${g} groups and currents he mentions, from Ibn Taymiyya to the new Sahwa.`,
   howT:"How to use it",how:"Drag the timeline, press ▶ to play it, or click the event marks above it. Dots move between cities as people did. Click a figure to see their group that year, the sheikh's view of them, their method, books, and coloured lines to people they held views on. The opinion scale: 😠 negative on the left, 😐 neutral in the middle, 😄 positive on the right. On the map: green is positive, red negative, dashed neutral. Each active group shows its logo where it was founded; pick a group to see its logo on every country it spread to. In “All groups” mode each country is striped in the colours of the groups present there. Zoom in to see everyone's portrait.",
   iconsT:"Method icons",partsT:"Episodes",noteA:"All opinions, judgments and classifications are attributed to the sheikh as stated in the series. Where he does not classify someone's creed, the card says so. Dates, places and geographic spread come from general historical knowledge and may be approximate. The text was taken from YouTube's automatic captions; English is a translation.",
-  loadErr:"Could not load the data. Reload the page."}
+  loadErr:"Could not load the data. Reload the page.",
+  listen:"Listen to the sheikh's episodes",follow:"Follow the sheikh on the map",followTip:"When the sheikh names a figure, group or year, its card opens and the map and timeline move with him",
+  prevEp:"Previous episode",nextEp:"Next episode",back10:"Back 10 seconds",fwd10:"Forward 10 seconds",playPause:"Play / pause",closePl:"Close the player",seek:"Playback position",
+  epN:n=>`Episode ${n}`,capNote:"Arabic text from YouTube's automatic captions",playFrom:"Listen from where he is first mentioned",onYT:"Open on YouTube",
+  jailed:"In prison",inPrison:(r,on,c)=>`In prison ${on ? `since ${r}` : `(${r})`} · ${c}`,prisonT:"Time in prison",stillHeld:"still held",prison:"Prison",
+  prisonNow:(y,n)=>`Held here in ${y}: ${n}`,prisonEmpty:y=>`No figure in the atlas is held here in ${y}`,deadMark:d=>`Died ${d}`,
+  audioT:"Listening along with the map",audioHow:"Press the headphones button 🎧 next to ▶ to hear the sheikh's episodes (from his YouTube channel), move between episodes, or skip back and forward. Turn on “Follow the sheikh on the map” and each figure or group opens as he names it, and the timeline moves to the year he is talking about, or to the figure's own time when he gives no year. Following works from the automatic captions, so it can sometimes be wrong. The prison mark on the map shows where prisons were; anyone in prison in the chosen year moves there, and anyone who has died shows a black sash on their portrait in the card."}
 };
 const CREEDC = {salafi:"var(--pos)","salafi-notes":"#c99a2e",rational:"#c7811c",sufi:"#7a5aa6",shia:"#8c2f39",jami:"#6e6e6e",secular:"var(--neg)",other:"var(--neu)",none:"var(--neu)"};
 const STP = {
@@ -510,6 +581,7 @@ function applyLang(){
   TABS.forEach((k, i) => $("#tab-" + k).textContent = t.tabs[i]);
   $("#lay-sel").textContent = t.laySel; $("#lay-all").textContent = t.layAll;
   $("#lang-ar").setAttribute("aria-pressed", lang === "ar"); $("#lang-en").setAttribute("aria-pressed", lang === "en");
+  playerLang();
   $("#eventcap").dir = lang === "ar" ? "rtl" : "ltr"; $("#legend-t").textContent = t.legend; $("#bcard").dir = lang === "ar" ? "rtl" : "ltr";
   $("#legend").innerHTML = Object.entries(t.cat).map(([k, v]) => `<span><i class="dot" style="background:var(--c-${k})"></i>${v}</span>`).join("");
   if (D){ $("#ticks").innerHTML = D.events.map(([y], i) => `<button class="tick" data-i="${i}" style="left:${toPos(y) * 100}%" title="${y}: ${esc(evText(i))}" aria-label="${y}: ${esc(evText(i))}"></button>`).join(""); }
@@ -519,17 +591,21 @@ $("#lang-ar").onclick = () => setLang("ar"); $("#lang-en").onclick = () => setLa
 
 /* ---------- data helpers ---------- */
 const alive = (p, y) => p.b <= y && y <= (p.d ?? NOW);
-const cityAt = (p, y) => { let c = p.loc[0][1]; for (const [ly, lc] of p.loc) if (ly <= y) c = lc; return c; };
+// pr: [[from, to | null while still held, cityKey, 1 = approximate]]; while held, the figure sits at the prison city
+const prisonAt = (p, y) => (p.pr || []).find(r => r[0] <= y && y <= (r[1] ?? NOW)) || null;
+const homeAt = (p, y) => { let c = p.loc[0][1]; for (const [ly, lc] of p.loc) if (ly <= y) c = lc; return c; };
+const cityAt = (p, y) => { const j = prisonAt(p, y); return j ? j[2] : homeAt(p, y); };
+const prYears = r => `${r[3] ? "~" : ""}${r[0]}${r[1] == null ? "" : r[1] === r[0] ? "" : "–" + r[1]}`;
 const memsAt = (p, y) => p.mem.filter(m => m[0] <= y && y <= (m[1] ?? NOW));
 const gActive = (g, y) => g.y <= y && y <= (g.e ?? NOW);
 const regAt = (g, y) => { const r = g.reg.find(r => r[0] <= y && y < (r[1] ?? NOW + 1)); return r ? r[2] : []; };
 
 /* ---------- map ---------- */
-let svg, gRoot, gCountries, gLayerTop, gSpread, gFound, proj, path, zoom, W = 800, H = 500, countries, ANCHOR = new Map();
+let svg, gRoot, gCountries, gLayerTop, gSpread, gFound, gPrison, proj, path, zoom, W = 800, H = 500, countries, ANCHOR = new Map();
 function initMap(world){
   svg = d3.select("#map");
   gRoot = svg.append("g"); gCountries = gRoot.append("g"); gLayerTop = svg.append("g");
-  gSpread = gLayerTop.append("g"); gFound = gLayerTop.append("g");   // created first, so dots, arcs and labels draw above them
+  gSpread = gLayerTop.append("g"); gFound = gLayerTop.append("g"); gPrison = gLayerTop.append("g");   // created first, so dots, arcs and labels draw above them
   countries = topojson.feature(world, world.objects.countries).features;
   // logo anchor per country: centre of its largest landmass (keeps France's on France, not between it and Guiana)
   countries.forEach(f => {
@@ -618,6 +694,24 @@ function drawSpread(){
   badgeJoin(gSpread, "gspread", items);
   gSpread.selectAll("text.gmore").data(more, d => d.key).join("text").attr("class", "gmore").attr("x", d => d.x).attr("y", d => d.y).text(d => "+" + d.n);
 }
+// a prison mark at every city where a figure was held, from the first stay there on; solid while someone is inside
+let PRISONS = null;
+function drawPrisons(){
+  if (!PRISONS){ PRISONS = new Map(); P.forEach(p => (p.pr || []).forEach(r => PRISONS.set(r[2], Math.min(PRISONS.get(r[2]) ?? NOW, r[0])))); }
+  const items = [];
+  PRISONS.forEach((from, c) => { if (year < from) return; const C = D.cities[c], [x, y] = pt(C[1], C[2]);
+    const inside = P.filter(p => alive(p, year) && prisonAt(p, year)?.[2] === c);
+    items.push({c, x: x + 15, y: y + 13, inside}); });
+  const sel = gPrison.selectAll("g.prison").data(items, d => d.c).join(enter => { const g = enter.append("g").attr("class", "prison");
+    g.append("rect").attr("x", -7).attr("y", -7).attr("width", 14).attr("height", 14).attr("rx", 2.5);
+    [-3.5, 0, 3.5].forEach(dx => g.append("line").attr("x1", dx).attr("x2", dx).attr("y1", -4.5).attr("y2", 4.5));
+    g.append("text").attr("x", 9).attr("y", 4); return g; });
+  sel.attr("transform", d => `translate(${d.x},${d.y})`).classed("empty", d => !d.inside.length)
+    .select("text").text(d => d.inside.length > 1 ? d.inside.length : "");
+  sel.on("click", (e, d) => { e.stopPropagation(); if (d.inside.length) selectPerson(d.inside[0].id); })
+    .on("mouseenter", (e, d) => showTip(e, `<div><b>🔒 ${T().prison} · ${esc(cityName(d.c))}</b>${d.inside.length ? esc(T().prisonNow(year, d.inside.map(nm).join(lang === "ar" ? "، " : ", "))) : esc(T().prisonEmpty(year))}</div>`))
+    .on("mouseleave", hideTip);
+}
 function layout(){
   const byCity = d3.group(P.filter(p => alive(p, year)), p => cityAt(p, year)), out = [];
   const spread = transform.k >= 3 ? 22 : selP ? 14 : 7;
@@ -646,7 +740,9 @@ function drawDots(animate){
     s: selG === g.id ? 1.15 : .8, op: selG && selG !== g.id ? .4 : 1, tip: `${T().founded} ${g.y} · ${esc(cityName(g.pl))}`})); });
   badgeJoin(gFound, "gmark", gm);
   drawSpread();
-  const tipFor = d => { const m = memsAt(d.p, year).filter(m => m[3] !== "x").map(m => gn(GI[m[2]]))[0]; return `${avatar(d.p, "sm")}<div><b>${esc(nm(d.p))}</b>${esc(cityName(d.city))}${m ? " · " + esc(m) : ""}</div>`; };
+  drawPrisons();
+  const tipFor = d => { const m = memsAt(d.p, year).filter(m => m[3] !== "x").map(m => gn(GI[m[2]]))[0], j = prisonAt(d.p, year);
+    return `${avatar(d.p, "sm")}<div><b>${esc(nm(d.p))}</b>${j ? `🔒 ${T().jailed} · ` : ""}${esc(cityName(d.city))}${m && !j ? " · " + esc(m) : ""}</div>`; };
   // which visible people get a portrait on the map
   const bigK = transform.k >= 3;
   const withPic = d => IMG[d.p.id] && (bigK || d.p.id === selP || relSet.has(d.p.id));
@@ -761,7 +857,11 @@ function peopleListHTML(){
   ${elsewhere ? `<button class="alsohint" data-scope="all">${t.alsoOther(elsewhere)}</button>` : ""}`;
 }
 function personHTML(p){
-  const t = T(), here = alive(p, year), city = cityAt(p, year);
+  const t = T(), here = alive(p, year), city = cityAt(p, year), jail = here ? prisonAt(p, year) : null, dead = p.d && year > p.d;
+  // the mark sits inside the portrait itself: bars while held, a black sash after death
+  const ov = dead ? `<span class="ava-ov" role="img" aria-label="${esc(t.deadMark(p.d))}" title="${esc(t.deadMark(p.d))}"><i class="sash"></i></span>`
+           : jail ? `<span class="ava-ov jail" role="img" aria-label="${esc(t.jailed)}" title="${esc(t.jailed)}"></span>` : "";
+  const LOCK = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5zM9 3v18M12 3v18M15 3v18"/></svg>`;
   let status;
   if (!here) status = `<div class="st"><i style="background:var(--neu)"></i>${year < p.b ? t.notBorn(year, p.b) : t.died(p.d)}</div>`;
   else {
@@ -770,13 +870,14 @@ function personHTML(p){
     status += p.mem.filter(m => m[0] > year && !cur.some(c => c[2] === m[2])).map(m => `<div class="st"><i style="background:${GI[m[2]].c};opacity:.4"></i>${t.notYet(esc(gn(GI[m[2]])), m[0])}</div>`).join("");
     status += p.mem.filter(m => (m[1] ?? NOW) < year && !cur.some(c => c[2] === m[2])).map(m => `<div class="st"><i style="background:${GI[m[2]].c};opacity:.4"></i>${t.ended(esc(gn(GI[m[2]])), m[1])}</div>`).join("");
     if (!p.mem.length) status = `<div class="st"><i style="background:var(--neu)"></i>${t.noGroup}</div>`;
+    if (jail) status = `<div class="st jail">${LOCK}<b>${t.inPrison(`<bdi dir="ltr">${prYears(jail)}</bdi>`, jail[1] == null, esc(cityName(jail[2])))}</b></div>` + status;
   }
   const relRow = (o, s, txt) => `<div class="item"><div class="item-h" style="cursor:default">${avatar(o, "xs")}<button class="relname" data-p="${o.id}">${esc(nm(o))}</button><small>${alive(o, year) ? verdict(s) : `<span class="off">${t.notVisible}</span>`}</small></div>
     ${gauge(s)}<p class="sub2">${esc(txt[0])}</p><button class="more" data-t>${t.why}</button><p class="long" hidden>${esc(txt[1])}</p></div>`;
   const out = p.rel.filter(r => PI[r[0]]).map(r => relRow(PI[r[0]], r[1], relTxt(p, r[0], r))).join("");
   const inc = p.inc.map(r => relRow(PI[r[0]], r[1], relTxt(PI[r[0]], p.id, r))).join("");
   return `<button class="back" data-back>${t.allPeople}</button>
-  <div class="phead"><span class="ava-wrap">${avatar(p, "lg")}${flagImg(p, "flag")}</span><div><div class="meta"><i class="dot" style="background:var(--c-${p.cat})"></i> ${t.cat[p.cat]}${p.c ? ` · <span class="ctry">${flagImg(p, "")}${esc(ctryName(p.c))}</span>` : ""}</div><h2>${esc(nm(p))}</h2>
+  <div class="phead"><span class="ava-wrap">${avatar(p, "lg")}${ov}${flagImg(p, "flag")}</span><div><div class="meta"><i class="dot" style="background:var(--c-${p.cat})"></i> ${t.cat[p.cat]}${p.c ? ` · <span class="ctry">${flagImg(p, "")}${esc(ctryName(p.c))}</span>` : ""}</div><h2>${esc(nm(p))}</h2>
   <div class="meta">${yrs(p)}${here ? ` · ${t.inYear(year)} <b>${esc(cityName(city))}</b>` : ""}</div></div></div>
   <div class="status">${status}</div>
   <p class="lead">${esc(pf(p, "s"))}</p>
@@ -792,9 +893,10 @@ function personHTML(p){
   ${out ? `<div class="eyebrow">${t.hisViews}</div>${out}` : ""}
   ${inc ? `<div class="eyebrow">${t.othersViews}</div>${inc}` : ""}
   <div class="eyebrow">${t.journey}</div>
-  <div class="journey">${p.loc.map(([y, c], i) => { const cur = here && y <= year && year < (p.loc[i + 1] ? p.loc[i + 1][0] : NOW + 1); return `<button class="jrow${cur ? " cur" : ""}" data-y="${y}"><span>${y}</span><span>${esc(cityName(c))}</span></button>`; }).join("")}</div>
+  <div class="journey">${p.loc.map(([y, c], i) => { const cur = here && !jail && y <= year && year < (p.loc[i + 1] ? p.loc[i + 1][0] : NOW + 1); return `<button class="jrow${cur ? " cur" : ""}" data-y="${y}"><span>${y}</span><span>${esc(cityName(c))}</span></button>`; }).join("")}</div>
+  ${p.pr ? `<div class="eyebrow">${t.prisonT}</div><div class="journey">${p.pr.map(r => `<button class="jrow jailrow${jail === r ? " cur" : ""}" data-y="${r[0]}"><span><bdi dir="ltr">${prYears(r)}</bdi></span><span>${LOCK.replace("<svg", '<svg class="lock"')}${esc(cityName(r[2]))}${r[1] == null ? ` · ${t.stillHeld}` : ""}</span></button>`).join("")}</div>` : ""}
   <div class="eyebrow">${t.mentioned}</div>
-  <div class="parts">${p.p.map(n => `<a href="https://www.youtube.com/watch?v=${PARTS[n - 1]}" target="_blank" rel="noopener">${n}. ${t.parts[n - 1]}</a>`).join("")}</div>
+  <div class="parts">${p.p.map(n => partLink(n, p.id)).join("")}</div>
   <p class="note">${t.noteP}</p>${credit(p)}`;
 }
 function groupsListHTML(){
@@ -825,8 +927,9 @@ function aboutHTML(){
   ${gauge(-2, true)}
   <div class="eyebrow">${t.iconsT}</div>
   <div class="stances">${Object.keys(STP).map(k => `<div class="stance${NEG_ST.has(k) ? " neg" : ""}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${STP[k]}"/></svg>${t.st[k]}</div>`).join("")}</div>
+  <div class="eyebrow">${t.audioT}</div><p class="sub2">${t.audioHow}</p>
   <div class="eyebrow">${t.partsT}</div>
-  <div class="parts">${PARTS.map((id, i) => `<a href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener">${i + 1}. ${t.parts[i]}</a>`).join("")}</div>
+  <div class="parts">${PARTS.map((_, i) => partLink(i + 1)).join("")}</div>
   <p class="note">${t.noteA}</p>
   ${Object.keys(CRED).length ? `<details><summary class="eyebrow" style="cursor:pointer">${t.creditsT} · ${Object.keys(CRED).length}</summary><div class="credits">${P.filter(p => CRED[p.id]).map(p => { const c = CRED[p.id]; return `<div><b>${esc(nm(p))}</b> — <a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.artist || c.file)}</a> · ${esc(c.license)}</div>`; }).join("")}${G.filter(g => LOGO[g.id]).map(g => { const c = LOGO[g.id]; return `<div><b>${esc(gn(g))}</b> (${t.logo.replace(":", "")}) — <a href="${esc(c.url)}" target="_blank" rel="noopener">${esc(c.artist || c.file)}</a> · ${esc(c.license)}</div>`; }).join("")}</div></details>` : ""}`;
 }
@@ -847,6 +950,7 @@ function wire(b){
     const pp = t.closest("[data-p]"); if (pp){ selectPerson(pp.dataset.p, true); return; }
     const gg = t.closest("[data-g]"); if (gg){ selectGroup(gg.dataset.g); return; }
     if (t.closest("[data-back]")){ if (tab === "groups") selG = null; else selP = null; paintCountries(); drawDots(false); render(); writeHash(); return; }
+    const ep = t.closest("[data-ep]"); if (ep){ playFrom(+ep.dataset.ep, ep.dataset.from); return; }
     const jy = t.closest("[data-y]"); if (jy){ setYear(+jy.dataset.y); return; }
     const m = t.closest("[data-t]"); if (m){ const l = m.nextElementSibling; if (!m.dataset.lbl) m.dataset.lbl = m.textContent; l.hidden = !l.hidden; m.textContent = l.hidden ? m.dataset.lbl : T().hide; return; }
     const m2 = t.closest("[data-t2]"); if (m2){ const l = m2.parentElement.querySelector(".long"); l.hidden = !l.hidden; }
@@ -862,6 +966,123 @@ function selectGroup(id){
   selG = id; tab = "groups";
   if (!gActive(GI[id], year)) setYear(GI[id].y, true);
   paintCountries(); drawDots(false); render(); $("#pbody").scrollTop = 0; writeHash();
+}
+
+/* ---------- episode player and "follow the sheikh" ----------
+   Audio is the sheikh's own YouTube videos through the official embedded player (nothing is re-hosted).
+   audio/<n>.json: {v: videoId, lines: [[sec, text]], cues: [[sec, "p"|"g", id] | [sec, "y", year]]},
+   built from the word-timed captions by the private build script. */
+const ERA_EP = [1950, 1850, 1930, 1952, 1958, 1975, 1990, 2010, 2016, 2020];   // each episode's centre of gravity
+const EPD = {}, epData = n => EPD[n] || (EPD[n] = fetch(`audio/${n}.json`).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).catch(e => { delete EPD[n]; throw e; }));
+let YTP = null, ytLoad = null, AU = {ep: 1, t: 0, follow: true, data: null, cue: -1, lastT: -1, timer: null, saved: 0, seeking: false};
+try { const s = JSON.parse(localStorage.getItem("atlas-audio") || "null"); if (s && s.ep >= 1 && s.ep <= 10) { AU.ep = s.ep; AU.t = +s.t || 0; AU.follow = s.follow !== false; } } catch(e) {}
+const saveAU = () => { try { localStorage.setItem("atlas-audio", JSON.stringify({ep: AU.ep, t: Math.floor(AU.t), follow: AU.follow})); } catch(e) {} };
+const fmt = s => { s = Math.max(0, Math.floor(s)); const h = Math.floor(s / 3600), m = Math.floor(s / 60) % 60, x = String(s % 60).padStart(2, "0"); return h ? `${h}:${String(m).padStart(2, "0")}:${x}` : `${m}:${x}`; };
+function partLink(n, pid){
+  const t = T();
+  return `<span class="part"><button data-ep="${n}"${pid ? ` data-from="${pid}" title="${esc(t.playFrom)}"` : ""}>▶ ${n}. ${t.parts[n - 1]}</button><a class="yt-link" href="https://www.youtube.com/watch?v=${PARTS[n - 1]}" target="_blank" rel="noopener" title="${esc(t.onYT)}" aria-label="${esc(t.onYT)}">↗</a></span>`;
+}
+function loadYT(){
+  if (ytLoad) return ytLoad;
+  ytLoad = new Promise((res, rej) => { if (window.YT && YT.Player) return res();
+    const prev = window.onYouTubeIframeAPIReady; window.onYouTubeIframeAPIReady = () => { if (prev) prev(); res(); };
+    const s = document.createElement("script"); s.src = "https://www.youtube.com/iframe_api"; s.onerror = () => { ytLoad = null; rej(new Error("yt")); }; document.head.appendChild(s); });
+  return ytLoad;
+}
+function showPlayer(on){
+  $("#player").hidden = !on; $("#listen").setAttribute("aria-pressed", on);
+  clearInterval(AU.timer); AU.timer = on ? setInterval(tick, 300) : null;
+  if (!on && YTP && YTP.pauseVideo) YTP.pauseVideo();
+}
+// open episode n at second t; autoplay only after a click (browsers block sound otherwise)
+async function playEpisode(n, t = 0, auto = true){
+  n = Math.max(1, Math.min(10, n)); showPlayer(true);
+  if (playing) togglePlay();   // the timeline's own ▶ would fight the sheikh for the year
+  AU.ep = n; AU.t = t; AU.data = null; AU.cue = -1; AU.lastT = -1; $("#pl-ep").value = n; $("#pl-cap").textContent = "…"; saveAU();
+  let d; try { [d] = await Promise.all([epData(n), loadYT()]); } catch(e) { $("#pl-cap").textContent = T().loadErr; return; }
+  if (AU.ep !== n) return;   // another episode was picked meanwhile
+  AU.data = d;
+  if (!YTP){
+    const pv = {start: Math.floor(t), autoplay: auto ? 1 : 0, playsinline: 1, rel: 0};
+    if (/^https?:/.test(location.protocol)) pv.origin = location.origin;
+    YTP = new YT.Player("yt", {width: 200, height: 113, videoId: d.v, playerVars: pv,
+      events: {onReady: () => { if (auto) YTP.playVideo(); }, onStateChange: e => {
+        $("#pl-ppi").setAttribute("d", e.data === 1 ? "M3 2h4v12H3zM9 2h4v12H9z" : "M4 2l10 6-10 6z");
+        if (e.data === 0 && AU.ep < 10) playEpisode(AU.ep + 1, 0, true);   // ended: carry on with the next episode
+      }}});
+  } else if (auto) YTP.loadVideoById({videoId: d.v, startSeconds: t}); else YTP.cueVideoById({videoId: d.v, startSeconds: t});
+}
+// "Mentioned in episodes": start a little before the first time the sheikh names this figure
+function playFrom(n, pid){
+  epData(n).then(d => { const c = pid ? d.cues.find(c => c[1] === "p" && c[2] === pid) : null; playEpisode(n, c ? Math.max(0, c[0] - 4) : 0, true); })
+    .catch(() => playEpisode(n, 0, true));
+}
+const lastIdx = (arr, t) => { let lo = 0, hi = arr.length - 1, r = -1; while (lo <= hi){ const m = (lo + hi) >> 1; if (arr[m][0] <= t){ r = m; lo = m + 1; } else hi = m - 1; } return r; };
+function tick(){
+  if (!YTP || !YTP.getCurrentTime || !AU.data) return;
+  const t = YTP.getCurrentTime() || 0, dur = YTP.getDuration() || 0; AU.t = t;
+  if (!AU.seeking){ const s = $("#pl-seek"); s.max = Math.max(1, Math.floor(dur)); s.value = Math.floor(t); }
+  $("#pl-time").textContent = `${fmt(t)} / ${fmt(dur)}`;
+  const li = lastIdx(AU.data.lines, t), cap = li >= 0 ? AU.data.lines[li][1] : "";
+  if ($("#pl-cap").textContent !== cap) $("#pl-cap").textContent = cap;
+  if (Date.now() - AU.saved > 5000){ AU.saved = Date.now(); saveAU(); }
+  if (AU.follow){
+    const i = lastIdx(AU.data.cues, t);
+    if (i !== AU.cue){
+      if (AU.lastT < 0 || t < AU.lastT - 1 || t > AU.lastT + 5) replay(i);   // a seek: rebuild the state at this moment
+      else for (let k = AU.cue + 1; k <= i; k++) applyCue(AU.data.cues[k]);
+      AU.cue = i;
+    }
+  }
+  AU.lastT = t;
+}
+// where to put the timeline for a figure he names without a year: inside the figure's life, near the episode's period
+const repYear = p => { const hi = p.d ?? NOW, lo = Math.min(p.b + 25, hi); return Math.max(lo, Math.min(hi, ERA_EP[AU.ep - 1])); };
+function applyCue(c){
+  if (!c) return;
+  if (c[1] === "y"){ if (c[2] !== year) setYear(c[2]); return; }
+  if (c[1] === "p"){
+    const p = PI[c[2]]; if (!p || (selP === p.id && tab === "people")) return;
+    if (!alive(p, year)) setYear(repYear(p), true);
+    selectPerson(p.id); bringIntoView(p); return;
+  }
+  const g = GI[c[2]]; if (!g || (selG === g.id && tab === "groups")) return;
+  // a figure's own group being named keeps the figure open: the card already shows it
+  if (selP && tab === "people" && memsAt(PI[selP], year).some(m => m[2] === g.id)) return;
+  if (!gActive(g, year)) setYear(g.y, true);
+  selectGroup(g.id);
+}
+function replay(i){
+  if (i < 0) return;
+  const cs = AU.data.cues.slice(0, i + 1), ent = cs.filter(c => c[1] !== "y").pop(), yc = cs.filter(c => c[1] === "y").pop();
+  if (yc && (!ent || yc[0] >= ent[0] - 60)) setYear(yc[2], !!ent);
+  if (ent){ selP = selG = null; applyCue(ent); }
+}
+// pan (never zoom) so a followed figure who is off screen comes to the middle
+function bringIntoView(p){
+  const C = D.cities[cityAt(p, year)]; if (!C) return;
+  const [x, y] = pt(C[1], C[2]); if (x > 40 && x < W - 40 && y > 80 && y < H - 40) return;
+  svg.transition().duration(700).call(zoom.translateBy, (W / 2 - x) / transform.k, (H / 2 - y) / transform.k);
+}
+$("#listen").onclick = () => { if (!$("#player").hidden){ showPlayer(false); return; } if (YTP && AU.data){ showPlayer(true); return; } playEpisode(AU.ep, AU.t, true); };
+$("#pl-close").onclick = () => showPlayer(false);
+$("#pl-ep").onchange = e => playEpisode(+e.target.value, 0, true);
+$("#pl-prev").onclick = () => { if (AU.ep > 1) playEpisode(AU.ep - 1, 0, true); };
+$("#pl-next").onclick = () => { if (AU.ep < 10) playEpisode(AU.ep + 1, 0, true); };
+$("#pl-pp").onclick = () => { if (!YTP || !YTP.getPlayerState) return; YTP.getPlayerState() === 1 ? YTP.pauseVideo() : YTP.playVideo(); };
+const skip = d => { if (YTP && YTP.seekTo) YTP.seekTo(Math.max(0, (YTP.getCurrentTime() || 0) + d), true); };
+$("#pl-back").onclick = () => skip(-10); $("#pl-fwd").onclick = () => skip(10);
+$("#pl-seek").addEventListener("input", () => { AU.seeking = true; $("#pl-time").textContent = `${fmt(+$("#pl-seek").value)} / ${fmt(YTP && YTP.getDuration ? YTP.getDuration() : 0)}`; });
+$("#pl-seek").addEventListener("change", () => { AU.seeking = false; if (YTP && YTP.seekTo) YTP.seekTo(+$("#pl-seek").value, true); });
+$("#pl-follow").checked = AU.follow;
+$("#pl-follow").onchange = e => { AU.follow = e.target.checked; saveAU(); if (AU.follow && AU.data){ AU.cue = lastIdx(AU.data.cues, AU.t); replay(AU.cue); } };
+function playerLang(){
+  const t = T();
+  $("#listen").title = t.listen; $("#listen").setAttribute("aria-label", t.listen);
+  $("#pl-follow-t").textContent = t.follow; $("#pl-follow").parentElement.title = t.followTip;
+  [["#pl-prev", t.prevEp], ["#pl-next", t.nextEp], ["#pl-back", t.back10], ["#pl-fwd", t.fwd10], ["#pl-pp", t.playPause], ["#pl-close", t.closePl]].forEach(([s, l]) => { $(s).title = l; $(s).setAttribute("aria-label", l); });
+  $("#pl-seek").setAttribute("aria-label", t.seek); $("#pl-cap").title = t.capNote;
+  $("#pl-ep").innerHTML = PARTS.map((_, i) => `<option value="${i + 1}">${t.epN(i + 1)} · ${esc(t.parts[i])}</option>`).join(""); $("#pl-ep").value = AU.ep;
 }
 })();
 </script>
