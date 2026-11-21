@@ -204,7 +204,8 @@ dialog.bcard::backdrop{background:rgba(10,16,15,.45)}
 .legend[open] summary{margin-bottom:4px}
 /* portrait overlays in the card: bars while in prison, a black mourning sash once dead (photos may already be black and white, so no greyscale) */
 .ava-ov{position:absolute;left:0;top:0;width:88px;height:88px;border-radius:50%;overflow:hidden;pointer-events:none}
-.ava-ov.jail{background:repeating-linear-gradient(90deg,transparent 0 10px,rgba(24,26,28,.82) 10px 14px)}
+.ava-ov .jailb{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;background:#2b3035;border:2px solid #fff;display:grid;place-items:center;box-shadow:0 1px 4px rgba(0,0,0,.45)}
+.ava-ov .jailb svg{width:14px;height:14px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .ava-ov .sash{position:absolute;width:150%;height:16px;left:-52%;top:18%;transform:rotate(-45deg);background:#111;box-shadow:0 0 0 1.5px rgba(255,255,255,.9)}
 .st.jail svg,.jrow .lock{width:14px;height:14px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
 .jrow.jailrow{grid-template-columns:96px 1fr}
@@ -398,7 +399,7 @@ const UI = {
   listen:"استمع إلى حلقات الشيخ",playTL:"شغّل شريط الزمن",follow:"تتبّع الشيخ على الخريطة",followTip:"حين يذكر الشيخ شخصية أو جماعة أو سنة تُفتح بطاقتها وتتحرك الخريطة والزمن معه",
   prevEp:"الحلقة السابقة",nextEp:"الحلقة التالية",back10:"رجوع 10 ثوانٍ",fwd10:"تقديم 10 ثوانٍ",playPause:"تشغيل / إيقاف",closePl:"إغلاق المشغّل",seek:"موضع التشغيل",
   epN:n=>`الحلقة ${n}`,capNote:"النص من الترجمة الآلية في يوتيوب",playFrom:"استمع من أول موضع ذُكر فيه",onYT:"افتح على يوتيوب",
-  jailed:"في السجن",inPrison:(r,on,c)=>`في السجن ${on ? `منذ ${r}` : `(${r})`} · ${c}`,prisonT:"فترات السجن",stillHeld:"حتى الآن",prison:"سجن",
+  jailed:"في السجن",inPrison:(r,on,c)=>`في السجن ${on ? `منذ ${r}` : `(${r})`} · ${c}`,prisonT:"فترات السجن",stillHeld:"حتى الآن",prisonUnknown:"سُجن وعُذّب بحسب الشيخ · التاريخ غير معروف",prison:"سجن",
   prisonNow:(y,n)=>`مسجونون هنا في ${y}: ${n}`,prisonEmpty:y=>`لا أحد من شخصيات الأطلس مسجون هنا في ${y}`,deadMark:d=>`توفي سنة ${d}`,
   audioT:"الاستماع مع الخريطة",audioHow:["اضغط «استمع إلى حلقات الشيخ» أعلى الصفحة لتسمع الحلقات من قناته على يوتيوب، وتنقّل بينها أو تقدّم وارجع.","فعّل «تتبّع الشيخ على الخريطة» فتُفتح بطاقة كل شخصية أو جماعة حين يذكرها، وينتقل الزمن إلى السنة التي يتكلم عنها، أو إلى زمن الشخصية إن لم يذكر سنة. التتبع آلي من الترجمة النصية فقد يخطئ أحيانًا.","في بطاقة كل شخصية، ▶ بجانب الحلقة يبدأ من أول موضع ذكرها الشيخ فيه.","علامة السجن تظهر حيث كان أحدهم مسجونًا في السنة المختارة، ومن توفي تظهر على صورته في البطاقة شارة سوداء."]},
  en:{title:"Atlas of Islamic Movements",sub:"Every figure and group Sheikh Ahmad bin Khalid al-Hajri mentions in his 10-part series on Islamic groups, on a map and through time",
@@ -437,7 +438,7 @@ const UI = {
   listen:"Listen to the sheikh's episodes",playTL:"Play the timeline",follow:"Follow the sheikh on the map",followTip:"When the sheikh names a figure, group or year, its card opens and the map and timeline move with him",
   prevEp:"Previous episode",nextEp:"Next episode",back10:"Back 10 seconds",fwd10:"Forward 10 seconds",playPause:"Play / pause",closePl:"Close the player",seek:"Playback position",
   epN:n=>`Episode ${n}`,capNote:"Arabic text from YouTube's automatic captions",playFrom:"Listen from where he is first mentioned",onYT:"Open on YouTube",
-  jailed:"In prison",inPrison:(r,on,c)=>`In prison ${on ? `since ${r}` : `(${r})`} · ${c}`,prisonT:"Time in prison",stillHeld:"still held",prison:"Prison",
+  jailed:"In prison",inPrison:(r,on,c)=>`In prison ${on ? `since ${r}` : `(${r})`} · ${c}`,prisonT:"Time in prison",stillHeld:"still held",prisonUnknown:"Imprisoned and tortured, per the sheikh · date unknown",prison:"Prison",
   prisonNow:(y,n)=>`Held here in ${y}: ${n}`,prisonEmpty:y=>`No figure in the atlas is held here in ${y}`,deadMark:d=>`Died ${d}`,
   audioT:"Listening along with the map",audioHow:["Press “Listen to the sheikh's episodes” at the top to hear the episodes from his YouTube channel, move between them, or skip back and forward.","Turn on “Follow the sheikh on the map” and each figure or group opens as he names it, and the timeline moves to the year he is talking about, or to the figure's own time when he gives no year. Following works from the automatic captions, so it can sometimes be wrong.","On a figure's card, the ▶ beside an episode starts where the sheikh first mentions them.","A prison mark shows where someone was held in the chosen year, and anyone who has died shows a black sash on their portrait in the card."]}
 };
@@ -918,10 +919,10 @@ function peopleListHTML(){
 }
 function personHTML(p){
   const t = T(), here = alive(p, year), city = cityAt(p, year), jail = here ? prisonAt(p, year) : null, dead = p.d && year > p.d;
-  // the mark sits inside the portrait itself: bars while held, a black sash after death
-  const ov = dead ? `<span class="ava-ov" role="img" aria-label="${esc(t.deadMark(p.d))}" title="${esc(t.deadMark(p.d))}"><i class="sash"></i></span>`
-           : jail ? `<span class="ava-ov jail" role="img" aria-label="${esc(t.jailed)}" title="${esc(t.jailed)}"></span>` : "";
   const LOCK = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5zM9 3v18M12 3v18M15 3v18"/></svg>`;
+  // the mark sits inside the portrait itself: a small prison badge in a corner while held, a black sash after death
+  const ov = dead ? `<span class="ava-ov" role="img" aria-label="${esc(t.deadMark(p.d))}" title="${esc(t.deadMark(p.d))}"><i class="sash"></i></span>`
+           : jail ? `<span class="ava-ov" role="img" aria-label="${esc(t.jailed)}" title="${esc(t.jailed)}"><i class="jailb">${LOCK}</i></span>` : "";
   let status;
   if (!here) status = `<div class="st"><i style="background:var(--neu)"></i>${year < p.b ? t.notBorn(year, p.b) : t.died(p.d)}</div>`;
   else {
@@ -959,6 +960,7 @@ function personHTML(p){
   <div class="eyebrow">${t.journey}</div>
   <div class="journey">${p.loc.map(([y, c], i) => { const cur = here && !jail && y <= year && year < (p.loc[i + 1] ? p.loc[i + 1][0] : NOW + 1); return `<button class="jrow${cur ? " cur" : ""}" data-y="${y}"><span>${y}</span><span>${esc(cityName(c))}</span></button>`; }).join("")}</div>
   ${p.pr ? `<div class="eyebrow">${t.prisonT}</div><div class="journey">${p.pr.map(r => `<button class="jrow jailrow${jail === r ? " cur" : ""}" data-y="${r[0]}"><span><bdi dir="ltr">${prYears(r)}</bdi></span><span>${LOCK.replace("<svg", '<svg class="lock"')}${esc(cityName(r[2]))}${r[1] == null ? ` · ${t.stillHeld}` : ""}</span></button>`).join("")}</div>` : ""}
+  ${p.pru && !p.pr ? `<div class="eyebrow">${t.prisonT}</div><div class="journey"><div class="jrow jailrow" style="cursor:default"><span>—</span><span>${LOCK.replace("<svg", '<svg class="lock"')}${t.prisonUnknown}</span></div></div>` : ""}
   <p class="note">${t.noteP}</p>${credit(p)}`;
 }
 function groupsListHTML(){
